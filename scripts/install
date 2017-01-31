@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# Exit on command errors and treat unset variables as an error
+set -eu
+
+shopt -s extglob  # sets extended pattern matching options in the bash shell
+
+app=$YNH_APP_INSTANCE_NAME
+
+# Source local helpers
+source ./_common.sh
+SRCPATH=$(pwd)
+
+# Retrieve arguments
+domain=$YNH_APP_ARG_DOMAIN
+path=$YNH_APP_ARG_PATH
+is_public=$YNH_APP_ARG_IS_PUBLIC
+
+# Source YunoHost helpers
+source /usr/share/yunohost/helpers
+
+# Save app settings
+ynh_app_setting_set "$app" is_public "$is_public"
+
+# Fix path if needed
+path=$(fix_path $path)
+
+# Check domain/path availability
+sudo yunohost app checkurl "${domain}${path}" -a "$app" \
+    || ynh_die "Path not available: ${domain}${path}"
+
+# Download and extract application 
+TMPDIR=$(extract_application)
+
+# Install dependencies
+ynh_package_update
+ynh_package_install zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs
+
+# Launch netdata installation in /opt directory
+cd $TMPDIR
+sudo ./netdata-installer.sh --install /opt --dont-wait
+# Store the uninstaller for the removal script
+sudo mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
+# Store the local helper for backup/restore scripts
+sudo cp $SRCPATH/_common.sh /opt/netdata/etc/netdata
+
+# Modify Nginx configuration file and copy it to Nginx conf directory
+if [[ "$path" == "/" ]] ; then
+  nginx_conf=$SRCPATH/../conf/nginx_root.conf
+else
+  nginx_conf=$SRCPATH/../conf/nginx_sub_dir.conf
+fi
+
+sed -i "s@YNH_WWW_PATH@$path@g" $nginx_conf
+sudo cp $nginx_conf /etc/nginx/conf.d/$domain.d/$app.conf
+
+# If app is public, add url to SSOWat conf as skipped_uris
+if [[ $is_public -eq 1 ]]; then
+  # unprotected_uris allows SSO credentials to be passed anyway.
+  ynh_app_setting_set "$app" unprotected_uris "/"
+fi
+
+# Reload services
+sudo service nginx reload

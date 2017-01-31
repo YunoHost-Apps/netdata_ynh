@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Exit on command errors and treat unset variables as an error
+set -eu
+
+shopt -s extglob  # sets extended pattern matching options in the bash shell
+
+app=$YNH_APP_INSTANCE_NAME
+
+# Source local helpers
+source ./_common.sh
+SRCPATH=$(pwd)
+
+# Source YunoHost helpers
+source /usr/share/yunohost/helpers
+
+# Retrieve app settings
+domain=$(ynh_app_setting_get "$app" domain)
+path=$(ynh_app_setting_get "$app" path)
+is_public=$(ynh_app_setting_get "$app" is_public)
+
+# Fix path if needed
+path=$(fix_path $path)
+
+# Download and extract application 
+TMPDIR=$(extract_application)
+
+# signal netdata to start saving its database
+# this is handy if your database is big
+pids=$(pidof netdata)
+[ ! -z "${pids}" ] && sudo kill -USR1 ${pids}
+
+# create a temporary file for the log
+tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
+# open fd 3 and send it to tmp
+exec 3>${tmp}
+    
+# Launch netdata installation in /opt directory
+cd $TMPDIR
+sudo ./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+# Store the uninstaller for the removal script
+sudo mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
+# Store the local helper for backup/restore scripts
+sudo cp $SRCPATH/_common.sh /opt/netdata/etc/netdata
+
+# Modify Nginx configuration file and copy it to Nginx conf directory
+if [[ "$path" == "/" ]] ; then
+  nginx_conf=$SRCPATH/../conf/nginx_root.conf
+else
+  nginx_conf=$SRCPATH/../conf/nginx_sub_dir.conf
+fi
+
+sed -i "s@YNH_WWW_PATH@${path}@g" $nginx_conf
+sudo cp $nginx_conf /etc/nginx/conf.d/$domain.d/$app.conf
+
+# If app is public, add url to SSOWat conf as skipped_uris
+if [[ $is_public -eq 1 ]]; then
+  # See install script
+  ynh_app_setting_set "$app" unprotected_uris "/"
+fi
+
+# Reload nginx service
+sudo service nginx reload
