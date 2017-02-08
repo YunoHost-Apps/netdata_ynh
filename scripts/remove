@@ -9,6 +9,9 @@ app=$YNH_APP_INSTANCE_NAME
 # Source YunoHost helpers
 source /usr/share/yunohost/helpers
 
+# Source local helpers
+source ./_common.sh
+
 # Retrieve app settings
 domain=$(ynh_app_setting_get "$app" domain)
 
@@ -24,6 +27,9 @@ sudo sed -i "s/rm -i/rm -f/g" ${UNINSTALL_SCRIPT}
 sudo sed -i "s/rm -I/rm -f/g" ${UNINSTALL_SCRIPT}
 # Execute the uninstall script
 sudo ./${UNINSTALL_SCRIPT} --force
+
+# Remove app dependencies
+ynh_package_autoremove "$DEPS_PKG_NAME" || true
 
 # Remove user and group
 sudo userdel netdata

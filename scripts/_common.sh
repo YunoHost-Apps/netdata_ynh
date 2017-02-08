@@ -9,6 +9,9 @@ VERSION="1.5.0"
 # Remote URL to fetch application source archive
 APPLICATION_SOURCE_URL="https://github.com/firehol/netdata/releases/download/v${VERSION}/netdata-${VERSION}.tar.gz"
 
+# Package name for NetData dependencies
+DEPS_PKG_NAME="netdata-deps"
+
 #
 # Common helpers
 #

@@ -23,7 +23,7 @@ is_public=$(ynh_app_setting_get "$app" is_public)
 path=$(fix_path $path)
 
 # Download and extract application 
-TMPDIR=$(extract_application)
+NETDATA_TMPDIR=$(extract_application)
 
 # signal netdata to start saving its database
 # this is handy if your database is big
@@ -36,7 +36,7 @@ tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
 exec 3>${tmp}
     
 # Launch netdata installation in /opt directory
-cd $TMPDIR
+cd $NETDATA_TMPDIR
 sudo ./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 # Store the uninstaller for the removal script
 sudo mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata

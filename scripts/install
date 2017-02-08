@@ -9,6 +9,7 @@ app=$YNH_APP_INSTANCE_NAME
 
 # Source local helpers
 source ./_common.sh
+
 SRCPATH=$(pwd)
 
 # Retrieve arguments
@@ -30,19 +31,22 @@ sudo yunohost app checkurl "${domain}${path}" -a "$app" \
     || ynh_die "Path not available: ${domain}${path}"
 
 # Download and extract application 
-TMPDIR=$(extract_application)
+NETDATA_TMPDIR=$(extract_application)
 
 # Install dependencies
-ynh_package_update
-ynh_package_install zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs
+ynh_package_install_from_equivs ../conf/${DEPS_PKG_NAME}.control \
+|| ynh_die "Unable to install dependencies"
 
 # Launch netdata installation in /opt directory
-cd $TMPDIR
+cd $NETDATA_TMPDIR
 sudo ./netdata-installer.sh --install /opt --dont-wait
+
 # Store the uninstaller for the removal script
 sudo mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
-# Store the local helper for backup/restore scripts
+
+# Store useful files for backup/restore scripts
 sudo cp $SRCPATH/_common.sh /opt/netdata/etc/netdata
+sudo cp $SRCPATH/../conf/netdata-deps.control /opt/netdata/etc/netdata
 
 # Modify Nginx configuration file and copy it to Nginx conf directory
 if [[ "$path" == "/" ]] ; then
