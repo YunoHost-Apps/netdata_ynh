@@ -1,5 +1,5 @@
 {
-    "name": "netdata",
+    "name": "NetData",
     "id": "netdata",
     "packaging_format": 1,
     "description": {
@@ -49,7 +49,7 @@
                     "en": "Is it a public application?",
                     "fr": "Est-ce une application publique ?"
                 },
-                "default": true
+                "default": false
             }
         ]
     }
