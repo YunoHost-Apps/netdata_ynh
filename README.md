@@ -213,5 +213,5 @@ And you can extend it, by writing plugins that collect data from any source, usi
 ## Links
 
  * Report a bug: https://github.com/YunoHost-Apps/netdata_ynh/issues
- * NetData website: http://http://my-netdata.io/
+ * NetData website: http://my-netdata.io/
  * YunoHost website: https://yunohost.org/

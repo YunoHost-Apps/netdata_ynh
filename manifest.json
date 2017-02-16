@@ -11,15 +11,14 @@
     "maintainer": {
         "name": "JimboJoe",
         "email": "jimmy@monin.net",
-        "url": "http://my-netdata.io/"
+        "url": ""
     },
     "requirements": {
     "yunohost": ">> 2.4.0"
     },
     "multi_instance": false,
     "services": [
-        "nginx",
-        "php5-fpm"
+        "nginx"
     ],
     "arguments": {
         "install" : [
