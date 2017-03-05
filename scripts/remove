@@ -31,8 +31,14 @@ sudo ./${UNINSTALL_SCRIPT} --force
 # Remove app dependencies
 ynh_package_autoremove "$DEPS_PKG_NAME" || true
 
+# Remove access rights for Dovecot monitoring
+sudo setfacl -x u:netdata /var/run/dovecot/stats
+
 # Remove user and group
 sudo userdel netdata
+
+# Remove MySQL user
+echo "drop user 'netdata'@'localhost';" | mysql -uroot -p$(sudo cat /etc/yunohost/mysql)
 
 # Remove nginx configuration file
 sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf

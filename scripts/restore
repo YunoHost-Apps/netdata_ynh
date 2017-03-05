@@ -33,6 +33,23 @@ ynh_package_install_from_equivs ./conf/${DEPS_PKG_NAME}.control \
 # Launch netdata installation in /opt directory
 cd $NETDATA_TMPDIR
 sudo ./netdata-installer.sh --install /opt --dont-wait
+
+# Create netdata user to monitor MySQL (if needed)
+ echo "select User from mysql.user where User = 'netdata';"| mysql -uroot -p$(sudo cat /etc/yunohost/mysql) || echo "create user 'netdata'@'localhost';
+grant usage on *.* to 'netdata'@'localhost' with grant option;
+flush privileges;" | mysql -uroot -p$(sudo cat /etc/yunohost/mysql)
+
+# Give dovecot privileges to netdata user to monitor Dovecot
+# Need dovecot 2.2.16+
+sudo setfacl -m u:netdata:rw /var/run/dovecot/stats
+
+# Add netdata to the adm group to access web logs
+sudo usermod -a -G adm netdata
+
+# Restart NetData
+sudo systemctl restart netdata
+
+# Store the uninstaller for the removal script
 sudo mv ./netdata-uninstaller.sh /opt/netdata
 
 # Restore configuration files

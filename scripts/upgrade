@@ -22,6 +22,10 @@ is_public=$(ynh_app_setting_get "$app" is_public)
 # Fix path if needed
 path=$(fix_path $path)
 
+# Upgrade dependencies
+ynh_package_install_from_equivs ../conf/${DEPS_PKG_NAME}.control \
+|| ynh_die "Unable to upgrade dependencies"
+
 # Download and extract application 
 NETDATA_TMPDIR=$(extract_application)
 
@@ -38,6 +42,25 @@ exec 3>${tmp}
 # Launch netdata installation in /opt directory
 cd $NETDATA_TMPDIR
 sudo ./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+
+# Create netdata user to monitor MySQL (if needed)
+is_mysql_user_existing=$(ynh_mysql_execute_as_root "select user from mysql.user where user = 'netdata';")
+if [ -z "$is_mysql_user_existing" ] ; then
+  ynh_mysql_execute_as_root "create user 'netdata'@'localhost';
+  grant usage on *.* to 'netdata'@'localhost' with grant option;
+  flush privileges;"
+fi
+
+# Give dovecot privileges to netdata user to monitor Dovecot
+# Need dovecot 2.2.16+
+sudo setfacl -m u:netdata:rw /var/run/dovecot/stats
+
+# Add netdata to the adm group to access web logs
+sudo usermod -a -G adm netdata
+
+# Restart NetData
+sudo systemctl restart netdata
+
 # Store the uninstaller for the removal script
 sudo mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
 # Store the local helper for backup/restore scripts

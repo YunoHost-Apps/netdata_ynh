@@ -4,8 +4,8 @@ Homepage: https://https://my-netdata.io/
 Standards-Version: 3.9.2
 
 Package: netdata-deps
-Version: 1.5.0-1
-Depends: zlib1g-dev, uuid-dev, libmnl-dev, gcc, make, git, autoconf, autoconf-archive, autogen, automake, pkg-config, curl, jq, nodejs
+Version: 1.5.0-2
+Depends: zlib1g-dev, uuid-dev, libmnl-dev, gcc, make, git, autoconf, autoconf-archive, autogen, automake, pkg-config, curl, jq, nodejs, python-mysqldb
 Architecture: all
 Description: meta package for NetData dependencies
  netdata is a system for distributed real-time performance and health monitoring. It provides unparalleled insights, in real-time, of everything happening on the system it runs  (including applications such as web and database servers), using modern interactive web dashboards.
