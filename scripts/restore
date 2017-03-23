@@ -64,4 +64,4 @@ sudo chown -R root: "$conf_path"
 sudo cp -a $SRCPATH/nginx.conf "/etc/nginx/conf.d/${domain}.d/${app}.conf"
 
 # Restart webserver
-sudo service nginx reload
+sudo systemctl reload nginx

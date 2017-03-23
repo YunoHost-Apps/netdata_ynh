@@ -53,6 +53,9 @@ sudo setfacl -m u:netdata:rw /var/run/dovecot/stats
 # Add netdata to the adm group to access web logs
 sudo usermod -a -G adm netdata
 
+# Declare service for YunoHost monitoring
+sudo yunohost service add netdata --log "/opt/netdata/var/log/netdata/error.log" "/opt/netdata/var/log/netdata/access.log" "/opt/netdata/var/log/netdata/debug.log"
+
 # Restart NetData
 sudo systemctl restart netdata
 
@@ -80,4 +83,4 @@ if [[ $is_public -eq 1 ]]; then
 fi
 
 # Reload services
-sudo service nginx reload
+sudo systemctl reload nginx

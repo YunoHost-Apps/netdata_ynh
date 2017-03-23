@@ -37,6 +37,9 @@ sudo setfacl -x u:netdata /var/run/dovecot/stats
 # Remove user and group
 sudo userdel netdata
 
+# Remove service from YunoHost monitoring
+sudo yunohost service remove netdata
+
 # Remove MySQL user
 echo "drop user 'netdata'@'localhost';" | mysql -uroot -p$(sudo cat /etc/yunohost/mysql)
 
@@ -45,6 +48,6 @@ sudo rm -f /etc/nginx/conf.d/$domain.d/$app.conf
 sudo rm -rf /home/yunohost.app/$app
 
 # Reload nginx service
-sudo service nginx reload
+sudo systemctl reload nginx
 
 
