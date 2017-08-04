@@ -4,7 +4,7 @@
 #
 
 # Application version
-VERSION="1.6.0"
+VERSION="1.7.0"
 
 # Remote URL to fetch application source archive
 APPLICATION_SOURCE_URL="https://github.com/firehol/netdata/releases/download/v${VERSION}/netdata-${VERSION}.tar.gz"
