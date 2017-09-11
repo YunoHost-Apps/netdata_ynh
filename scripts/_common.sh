@@ -32,6 +32,20 @@ configure_netdata() {
   mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
 }
 
+# Add a web_log entry for every YunoHost domain
+netdata_add_yunohost_web_logs () {
+  echo "# ------------YUNOHOST DOMAINS---------------" >> /opt/netdata/etc/netdata/python.d/web_log.conf
+  for domain in $(yunohost domain list --output-as plain); do
+  domain_label=${domain//\./_} # Replace "." by "_" for the domain label
+  cat >> /opt/netdata/etc/netdata/python.d/web_log.conf <<EOF
+${domain_label}_log:
+  name: '${domain_label}'
+  path: '/var/log/nginx/$domain-access.log'
+
+EOF
+done
+}
+
 # ============= FUTURE YUNOHOST HELPER =============
 # Delete a file checksum from the app settings
 #

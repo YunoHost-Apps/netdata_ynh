@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Retrieve arguments
+domain=$1
+
+# Look for the domain entry, and delete the related lines
+# by deleting every line between:
+# - the domain label (with "." replaced by "_")
+# - and the domain file specification (need to replace "." by "\." in order not to get interpreted by sed)
+sed --in-place "/${domain//\./_}_log/,/${domain//\./\\\.}/d" /opt/netdata/etc/netdata/python.d/web_log.conf

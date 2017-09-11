@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Retrieve arguments
+domain=$1
+domain_label=${domain//\./_} # Replace "." by "_" for the domain label
+# Add a web_log entry for this new domain
+cat >> /opt/netdata/etc/netdata/python.d/web_log.conf <<EOF
+${domain_label}_log:
+  name: '${domain_label}'
+  path: '/var/log/nginx/$domain-access.log'
+
+EOF
