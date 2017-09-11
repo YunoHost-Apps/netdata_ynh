@@ -49,6 +49,9 @@ ynh_replace_string "rm -I" "rm -f" ${UNINSTALL_SCRIPT}
 # Execute the uninstall script
 ./${UNINSTALL_SCRIPT} --force
 
+# Remove MySQL netdata user
+  ynh_mysql_execute_as_root "drop user 'netdata'@'localhost'; flush privileges;"
+  
 #=================================================
 # REMOVE NGINX CONFIGURATION
 #=================================================
