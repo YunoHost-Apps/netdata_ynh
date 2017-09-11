@@ -1,67 +1,88 @@
 #!/bin/bash
 
-# Exit on command errors and treat unset variables as an error
+#=================================================
+# GENERIC START
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit on command errors and treat access to unset variables as an error
 set -eu
+
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
+
+if [ ! -e _common.sh ]; then
+	# Get the _common.sh file if it's not in the current directory
+	cp ../settings/scripts/_common.sh ./_common.sh
+	chmod a+rx _common.sh
+fi
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# LOAD SETTINGS
+#=================================================
 
 app=$YNH_APP_INSTANCE_NAME
 
-# Source YunoHost helpers
-source /usr/share/yunohost/helpers
+domain=$(ynh_app_setting_get $app domain)
+path_url=$(ynh_app_setting_get $app path)
 
-# Retrieve old app settings
-domain=$(ynh_app_setting_get "$app" domain)
-path=$(ynh_app_setting_get "$app" path)
+#=================================================
+# CHECK IF THE APP CAN BE RESTORED
+#=================================================
 
-# Source local helpers
-source ./conf/_common.sh
-SRCPATH=$(pwd)
+ynh_webpath_available $domain $path_url \
+	|| ynh_die "Path not available: ${domain}${path_url}"
 
-# Fix path if needed
-path=$(fix_path $path)
+#=================================================
+# STANDARD RESTORATION STEPS
+#=================================================
+# RESTORE THE NGINX CONFIGURATION
+#=================================================
 
-# Check domain/path availability
-sudo yunohost app checkurl "${domain}${path}" -a "$app" \
-    || ynh_die "Path not available: ${domain}${path}"
-    
-# Download and extract application 
-NETDATA_TMPDIR=$(extract_application)
+ynh_restore_file "/etc/nginx/conf.d/$domain.d/$app.conf"
 
-# Install dependencies
-ynh_package_install_from_equivs ./conf/${DEPS_PKG_NAME}.control \
-|| ynh_die "Unable to install dependencies"
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
+
+ynh_install_app_dependencies $pkg_dependencies
+
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
+
+# Retrieve app.src from archive for ynh_setup_source helper
+mkdir ../conf
+cp opt/netdata/etc/netdata/app.src ../conf
+
+# Download, check integrity, uncompress and patch the source from app.src
+NETDATA_TMPDIR=$(mktemp -d)
+ynh_setup_source "$NETDATA_TMPDIR"
+
+#=================================================
+# INSTALL AND RESTORE THE APP CONFIGURATION
+#=================================================
 
 # Launch netdata installation in /opt directory
 cd $NETDATA_TMPDIR
-sudo ./netdata-installer.sh --install /opt --dont-wait
+./netdata-installer.sh --install /opt --dont-wait
 
-# Create netdata user to monitor MySQL (if needed)
- echo "select User from mysql.user where User = 'netdata';"| mysql -uroot -p$(sudo cat /etc/yunohost/mysql) || echo "create user 'netdata'@'localhost';
-grant usage on *.* to 'netdata'@'localhost' with grant option;
-flush privileges;" | mysql -uroot -p$(sudo cat /etc/yunohost/mysql)
-
-# Give dovecot privileges to netdata user to monitor Dovecot
-# Need dovecot 2.2.16+
-sudo setfacl -m u:netdata:rw /var/run/dovecot/stats
-
-# Add netdata to the adm group to access web logs
-sudo usermod -a -G adm netdata
-
-# Restart NetData
-sudo systemctl restart netdata
-
-# Store the uninstaller for the removal script
-sudo mv ./netdata-uninstaller.sh /opt/netdata
+configure_netdata
 
 # Restore configuration files
-conf_path="/opt/netdata/etc/netdata"
-sudo cp -a $SRCPATH/conf/* "$conf_path"
+ynh_restore_file "/opt/netdata/etc/netdata"
 
 # Restore permissions to app files
-# you may need to make some file and/or directory writeable by www-data (nginx user)
-sudo chown -R root: "$conf_path"
+chown -R root: "/opt/netdata/etc/netdata"
 
-# Restore NGINX configuration
-sudo cp -a $SRCPATH/nginx.conf "/etc/nginx/conf.d/${domain}.d/${app}.conf"
+#=================================================
+# GENERIC FINALISATION
+#=================================================
+# RELOAD NGINX AND PHP-FPM
+#=================================================
 
-# Restart webserver
-sudo systemctl reload nginx
+systemctl reload nginx

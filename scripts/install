@@ -1,89 +1,121 @@
 #!/bin/bash
 
-# Exit on command errors and treat unset variables as an error
-set -eu
+#=================================================
+# GENERIC START
+#=================================================
+# IMPORT GENERIC HELPERS
+#=================================================
 
-shopt -s extglob  # sets extended pattern matching options in the bash shell
+source _common.sh
+source /usr/share/yunohost/helpers
+
+#=================================================
+# MANAGE SCRIPT FAILURE
+#=================================================
+
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
+
+#=================================================
+# RETRIEVE ARGUMENTS FROM THE MANIFEST
+#=================================================
+
+domain=$YNH_APP_ARG_DOMAIN
+path_url=$YNH_APP_ARG_PATH
+is_public=$YNH_APP_ARG_IS_PUBLIC
 
 app=$YNH_APP_INSTANCE_NAME
 
-# Source local helpers
-source ./_common.sh
+#=================================================
+# CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
+#=================================================
 
-SRCPATH=$(pwd)
+# Normalize the url path syntax
+path_url=$(ynh_normalize_url_path $path_url)
 
-# Retrieve arguments
-domain=$YNH_APP_ARG_DOMAIN
-path=$YNH_APP_ARG_PATH
-is_public=$YNH_APP_ARG_IS_PUBLIC
+# Check web path availability
+ynh_webpath_available $domain $path_url
+# Register (book) web path
+ynh_webpath_register $app $domain $path_url
 
-# Source YunoHost helpers
-source /usr/share/yunohost/helpers
+#=================================================
+# STORE SETTINGS FROM MANIFEST
+#=================================================
 
-# Save app settings
-ynh_app_setting_set "$app" is_public "$is_public"
+ynh_app_setting_set $app domain $domain
+ynh_app_setting_set $app path $path_url
+ynh_app_setting_set $app is_public $is_public
 
-# Fix path if needed
-path=$(fix_path $path)
+#=================================================
+# STANDARD MODIFICATIONS
+#=================================================
+# INSTALL DEPENDENCIES
+#=================================================
 
-# Check domain/path availability
-sudo yunohost app checkurl "${domain}${path}" -a "$app" \
-    || ynh_die "Path not available: ${domain}${path}"
+ynh_install_app_dependencies $pkg_dependencies
 
-# Download and extract application 
-NETDATA_TMPDIR=$(extract_application)
+#=================================================
+# DOWNLOAD, CHECK AND UNPACK SOURCE
+#=================================================
 
-# Install dependencies
-ynh_package_install_from_equivs ../conf/${DEPS_PKG_NAME}.control \
-|| ynh_die "Unable to install dependencies"
+# Download, check integrity, uncompress and patch the source from app.src
+NETDATA_TMPDIR=$(mktemp -d)
+ynh_setup_source "$NETDATA_TMPDIR"
+
+#=================================================
+# NGINX CONFIGURATION
+#=================================================
+
+nginx_conf="../conf/nginx.conf"
+if [ "$path_url" = "/" ]
+then
+  # Handle root path, avoid double slash.
+  # Temporary fix, in waiting for an upgrade of the helper. (#361)
+  path_url_slash_less=${path_url%/}
+  ynh_replace_string "__PATH__/" "$path_url_slash_less/" $nginx_conf
+else
+  # Move prefix comment #for-subdir at end of lines
+  ynh_replace_string "#for-subdir\(.*\)" "\1 #for-subdir" $nginx_conf
+fi  
+
+# Create a dedicated nginx config
+ynh_add_nginx_config
+
+#=================================================
+# SPECIFIC SETUP
+#=================================================
+
+#=================================================
+# INSTALL AND CONFIGURE NETDATA
+#=================================================
 
 # Launch netdata installation in /opt directory
-cd $NETDATA_TMPDIR
-sudo ./netdata-installer.sh --install /opt --dont-wait
+pushd $NETDATA_TMPDIR
+./netdata-installer.sh --install /opt --dont-wait
 
-# Create netdata user to monitor MySQL
-ynh_mysql_execute_as_root "create user 'netdata'@'localhost';
-grant usage on *.* to 'netdata'@'localhost' with grant option;
-flush privileges;"
+configure_netdata
 
-# Give dovecot privileges to netdata user to monitor Dovecot
-# Need dovecot 2.2.16+
-sudo setfacl -m u:netdata:rw /var/run/dovecot/stats
+# Store the app.src file
+popd
+cp ../conf/app.src /opt/netdata/etc/netdata
 
-# Add netdata to the adm group to access web logs
-sudo usermod -a -G adm netdata
+#=================================================
+# GENERIC FINALIZATION
+#=================================================
 
-# Extend weblog path to process logs for every domain
-sed -i "s@path: '/var/log/nginx/access.log'@path: '/var/log/nginx/*-access.log'@g" /opt/netdata/etc/netdata/python.d/web_log.conf
-
-# Declare service for YunoHost monitoring
-sudo yunohost service add netdata --log "/opt/netdata/var/log/netdata/error.log" "/opt/netdata/var/log/netdata/access.log" "/opt/netdata/var/log/netdata/debug.log"
-
-# Restart NetData
-sudo systemctl restart netdata
-
-# Store the uninstaller for the removal script
-sudo mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
-
-# Store useful files for backup/restore scripts
-sudo cp $SRCPATH/_common.sh /opt/netdata/etc/netdata
-sudo cp $SRCPATH/../conf/netdata-deps.control /opt/netdata/etc/netdata
-
-# Modify Nginx configuration file and copy it to Nginx conf directory
-if [[ "$path" == "/" ]] ; then
-  nginx_conf=$SRCPATH/../conf/nginx_root.conf
-else
-  nginx_conf=$SRCPATH/../conf/nginx_sub_dir.conf
-fi
-
-sed -i "s@YNH_WWW_PATH@$path@g" $nginx_conf
-sudo cp $nginx_conf /etc/nginx/conf.d/$domain.d/$app.conf
+#=================================================
+# SETUP SSOWAT
+#=================================================
 
 # If app is public, add url to SSOWat conf as skipped_uris
-if [[ $is_public -eq 1 ]]; then
+if [ $is_public -eq 1 ]; then
   # unprotected_uris allows SSO credentials to be passed anyway.
   ynh_app_setting_set "$app" unprotected_uris "/"
 fi
 
-# Reload services
-sudo systemctl reload nginx
+
+#=================================================
+# RELOAD NGINX
+#=================================================
+
+systemctl reload nginx

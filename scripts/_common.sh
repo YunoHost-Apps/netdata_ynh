@@ -3,42 +3,32 @@
 # Common variables
 #
 
-# Application version
-VERSION="1.7.0"
+pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python-mysqldb libipmimonitoring-dev"
 
-# Remote URL to fetch application source archive
-APPLICATION_SOURCE_URL="https://github.com/firehol/netdata/releases/download/v${VERSION}/netdata-${VERSION}.tar.gz"
+# Configure NetData
+configure_netdata() {
+  # Create netdata user to monitor MySQL (if needed)
+  is_mysql_user_existing=$(ynh_mysql_execute_as_root "select user from mysql.user where user = 'netdata';")
+  if [ -z "$is_mysql_user_existing" ] ; then
+    ynh_mysql_execute_as_root "create user 'netdata'@'localhost';
+    grant usage on *.* to 'netdata'@'localhost' with grant option;
+    flush privileges;"
+  fi
 
-# Package name for NetData dependencies
-DEPS_PKG_NAME="netdata-deps"
+  # Give dovecot privileges to netdata user to monitor Dovecot
+  # Need dovecot 2.2.16+
+  setfacl -m u:netdata:rw /var/run/dovecot/stats
 
-#
-# Common helpers
-#
+  # Add netdata to the adm group to access web logs
+  usermod -a -G adm netdata
 
-# Download and extract application sources to the given directory
-# usage: extract_application_to DESTDIR
-extract_application() {
-  TMPDIR=$(mktemp -d)
-  chmod 755 $TMPDIR
-  archive="${TMPDIR}/application.tar.gz"
-  wget -q -O "$archive" "$APPLICATION_SOURCE_URL" \
-    || ynh_die "Unable to download application archive"
-  tar xf "$archive" -C "$TMPDIR" --strip-components 1 \
-    || ynh_die "Unable to extract application archive"
-  rm "$archive"
-  echo "$TMPDIR"
+  # Declare service for YunoHost monitoring
+  yunohost service add netdata --log "/opt/netdata/var/log/netdata/error.log" "/opt/netdata/var/log/netdata/access.log" "/opt/netdata/var/log/netdata/debug.log"
+
+  # Restart NetData
+  systemctl restart netdata
+
+  # Store the uninstaller for the removal script
+  mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
 }
 
-# Fix path if needed
-# usage: fix_patch PATH_TO_FIX
-fix_path() {
-  local path=$1
-  if [ "${path:0:1}" != "/" ] && [ ${#path} -gt 0 ]; then
-         path="/$path"
-  fi
-  if [ "${path:${#path}-1}" == "/" ] && [ ${#path} -gt 1 ]; then
-         path="${path:0:${#path}-1}"
-  fi
-  echo "$path"
-}

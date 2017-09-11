@@ -1,6 +1,9 @@
 NetData for YunoHost
 ---------------------
 
+[![Install Piwigo with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=piwigo)
+[![Integration level](https://dash.yunohost.org/integration/piwigo.svg)](https://ci-apps.yunohost.org/jenkins/job/piwigo%20%28Community%29/lastBuild/consoleFull)  
+
 
 [NetData](http://my-netdata.io/) is a system for **distributed real-time performance and health monitoring**.
 It provides **unparalleled insights, in real-time**, of everything happening on the
@@ -37,47 +40,52 @@ It has been tested on x86_64 and ARM.
 
  - **Stunning interactive bootstrap dashboards**<br/>
    mouse and touch friendly, in 2 themes: dark, light
-   
+
  - **Amazingly fast**<br/>
    responds to all queries in less than 0.5 ms per metric,
    even on low-end hardware
-   
+
  - **Highly efficient**<br/>
    collects thousands of metrics per server per second,
    with just 1% CPU utilization of a single core, a few MB of RAM and no disk I/O at all
-   
+
  - **Sophisticated alarming**<br/>
+   hundreds of alarms, **out of the box**!<br/>
    supports dynamic thresholds, hysteresis, alarm templates,
    multiple role-based notification methods (such as email, slack.com,
-   pushover.net, pushbullet.com telegram.org, twilio.com, messagebird.com)
-   
+   pushover.net, pushbullet.com, telegram.org, twilio.com, messagebird.com)
+
  - **Extensible**<br/>
    you can monitor anything you can get a metric for,
    using its Plugin API (anything can be a netdata plugin,
    BASH, python, perl, node.js, java, Go, ruby, etc)
-   
+
  - **Embeddable**<br/>
    it can run anywhere a Linux kernel runs (even IoT)
    and its charts can be embedded on your web pages too
-   
+
  - **Customizable**<br/>
    custom dashboards can be built using simple HTML (no javascript necessary)
-   
+
  - **Zero configuration**<br/>
    auto-detects everything, it can collect up to 5000 metrics
    per server out of the box
-   
+
  - **Zero dependencies**<br/>
    it is even its own web server, for its static web files and its web API
-   
+
  - **Zero maintenance**<br/>
    you just run it, it does the rest
-   
+
  - **scales to infinity**<br/>
    requiring minimal central resources
-   
- - **back-ends supported**<br/>
-   can archive its metrics on `graphite` or `opentsdb`, in the same or lower detail
+
+ - **several operating modes**<br/>
+   autonomous host monitoring, headless data collector, forwarding proxy, store and forward proxy, central multi-host monitoring, in all possible configurations.
+   Each node may have different metrics retention policy and run with or without health monitoring.
+
+ - **time-series back-ends supported**<br/>
+   can archive its metrics on `graphite`, `opentsdb`, `prometheus`, json document DBs, in the same or lower detail
    (lower: to prevent it from congesting these servers due to the amount of data collected)
 
 ![netdata](https://cloud.githubusercontent.com/assets/2662304/14092712/93b039ea-f551-11e5-822c-beadbf2b2a2e.gif)
@@ -86,7 +94,7 @@ It has been tested on x86_64 and ARM.
 
 ## What does it monitor?
 
-netdata monitors several thousands of metrics per device.
+netdata collects several thousands of metrics per device.
 All these metrics are collected and visualized in real-time.
 
 > _Almost all metrics are auto-detected, without any configuration._
@@ -94,13 +102,13 @@ All these metrics are collected and visualized in real-time.
 This is a list of what it currently monitors:
 
 - **CPU**<br/>
-  usage, interrupts, softirqs, frequency, total and per core
+  usage, interrupts, softirqs, frequency, total and per core, CPU states
 
 - **Memory**<br/>
   RAM, swap and kernel memory usage, KSM (Kernel Samepage Merging), NUMA
 
 - **Disks**<br/>
-  per disk: I/O, operations, backlog, utilization, space
+  per disk: I/O, operations, backlog, utilization, space, software RAID (md)
 
    ![sda](https://cloud.githubusercontent.com/assets/2662304/14093195/c882bbf4-f554-11e5-8863-1788d643d2c0.gif)
 
@@ -176,6 +184,9 @@ This is a list of what it currently monitors:
 - **Tomcat**<br/>
   accesses, threads, free memory, volume
 
+- **web server log files**<br/>
+  extracting in real-time, web server performance metrics and applying several health checks
+
 - **mySQL databases**<br/>
   multiple servers, each showing: bandwidth, queries/s, handlers, locks, issues,
   tmp operations, connections, binlog metrics, threads, innodb metrics, and more
@@ -188,11 +199,20 @@ This is a list of what it currently monitors:
 - **Redis databases**<br/>
   multiple servers, each showing: operations, hit rate, memory, keys, clients, slaves
 
+- **mongodb**<br/>
+  operations, clients, transactions, cursors, connections, asserts, locks, etc
+
 - **memcached databases**<br/>
   multiple servers, each showing: bandwidth, connections, items
 
+- **elasticsearch**<br/>
+  search and index performance, latency, timings, cluster statistics, threads statistics, etc
+
 - **ISC Bind name servers**<br/>
   multiple servers, each showing: clients, requests, queries, updates, failures and several per view metrics
+
+- **NSD name servers**<br/>
+  queries, zones, protocols, query types, transfers, etc.
 
 - **Postfix email servers**<br/>
   message queue (entries, size)
@@ -202,14 +222,26 @@ This is a list of what it currently monitors:
 
 - **Dovecot** POP3/IMAP servers<br/>
 
+- **ISC dhcpd**<br/>
+  pools utilization, leases, etc.
+
 - **IPFS**<br/>
   bandwidth, peers
 
 - **Squid proxy servers**<br/>
   multiple servers, each showing: clients bandwidth and requests, servers bandwidth and requests
 
+- **HAproxy**<br/>
+  bandwidth, sessions, backends, etc
+
+- **varnish**<br/>
+  threads, sessions, hits, objects, backends, etc
+
+- **OpenVPN**<br/>
+  status per tunnel
+
 - **Hardware sensors**<br/>
-  temperature, voltage, fans, power, humidity
+  `lm_sensors` and `IPMI`: temperature, voltage, fans, power, humidity
 
 - **NUT and APC UPSes**<br/>
   load, charge, battery voltage, temperature, utility metrics, output metrics
@@ -220,11 +252,16 @@ This is a list of what it currently monitors:
 - **hddtemp**<br/>
   disk temperatures
 
+- **smartd**<br/>
+  disk S.M.A.R.T. values
+
 - **SNMP devices**<br/>
   can be monitored too (although you will need to configure these)
 
-And you can extend it, by writing plugins that collect data from any source, using any computer language.
+- **statsd**<br/>
+  [netdata is a fully featured statsd server](https://github.com/firehol/netdata/wiki/statsd)
 
+And you can extend it, by writing plugins that collect data from any source, using any computer language.
 
 ## Links
 
