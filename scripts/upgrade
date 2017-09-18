@@ -89,6 +89,9 @@ exec 3>${tmp}
     
 # Launch netdata installation in /opt directory
 pushd $NETDATA_TMPDIR
+# Remove previous service definition (specific 1.8.0 upgrade)
+rm -f /etc/systemd/system/netdata.service
+
 ./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 
 # If YunoHost web logs have never been set in netdata configuration, set them
