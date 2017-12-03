@@ -1,4 +1,4 @@
-#!/bin/bash
+ï»¿#!/bin/bash
 
 #=================================================
 # GENERIC START
@@ -28,7 +28,7 @@ ynh_backup_before_upgrade	# Backup the current version of the app
 ynh_clean_setup () {
 	ynh_restore_upgradebackup	# restore it if the upgrade fails
 }
-ynh_abort_if_errors	# Active trap pour arrêter le script si une erreur est détectée.
+ynh_abort_if_errors	# Active trap to stop script execution if an error occurs
 
 #=================================================
 # CHECK THE PATH
