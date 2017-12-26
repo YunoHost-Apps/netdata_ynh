@@ -94,11 +94,6 @@ rm -f /etc/systemd/system/netdata.service
 
 ./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 
-# If YunoHost web logs have never been set in netdata configuration, set them
-if [ -z "$(grep "YUNOHOST" /opt/netdata/etc/netdata/python.d/web_log.conf)" ] ; then
-  netdata_add_yunohost_web_logs
-fi
-
 configure_netdata
 
 # Store the app.src file

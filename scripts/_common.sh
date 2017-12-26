@@ -3,10 +3,17 @@
 # Common variables
 #
 
-pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python-mysqldb libipmimonitoring-dev acl"
+pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python-mysqldb libipmimonitoring-dev acl python-psycopg2"
 
 # Configure NetData
 configure_netdata() {
+
+  # Add a web_log entry for every YunoHost domain
+  netdata_add_yunohost_web_logs
+  
+  # If PostgreSQL is installed, add a PostgreSQL entry using instance password
+  netdata_add_yunohost_postgres_configuration
+
   # Create netdata user to monitor MySQL (if needed)
   is_mysql_user_existing=$(ynh_mysql_execute_as_root "select user from mysql.user where user = 'netdata';")
   if [ -z "$is_mysql_user_existing" ] ; then
@@ -29,21 +36,39 @@ configure_netdata() {
   systemctl restart netdata
 
   # Store the uninstaller for the removal script
-  mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
+  [ -f ./netdata-uninstaller.sh ] && mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
 }
 
 # Add a web_log entry for every YunoHost domain
 netdata_add_yunohost_web_logs () {
-  echo "# ------------YUNOHOST DOMAINS---------------" >> /opt/netdata/etc/netdata/python.d/web_log.conf
-  for domain in $(yunohost domain list --output-as plain); do
-  domain_label=${domain//\./_} # Replace "." by "_" for the domain label
-  cat >> /opt/netdata/etc/netdata/python.d/web_log.conf <<EOF
+  local web_log_file="/opt/netdata/etc/netdata/python.d/web_log.conf"
+  if [ -z "$(grep "YUNOHOST" $web_log_file)" ] ; then
+    echo "# ------------YUNOHOST DOMAINS---------------" >> $web_log_file
+    for domain in $(yunohost domain list --output-as plain); do
+      domain_label=${domain//\./_} # Replace "." by "_" for the domain label
+      cat >> $web_log_file <<EOF
 ${domain_label}_log:
   name: '${domain_label}'
   path: '/var/log/nginx/$domain-access.log'
 
 EOF
-done
+    done
+  fi
+}
+
+# If PostgreSQL is installed, add a PostgreSQL entry using instance password
+netdata_add_yunohost_postgres_configuration () {
+  if [ -f /etc/yunohost/psql ] && [ -z "$(grep "yunohost:" /opt/netdata/etc/netdata/python.d/postgres.conf)" ] ; then
+     cat >> /opt/netdata/etc/netdata/python.d/postgres.conf <<EOF
+yunohost:
+    name     : 'local'
+    database : 'postgres'
+    user     : 'postgres'
+    password : '$(cat /etc/yunohost/psql)'
+    host     : 'localhost'
+    port     : 5432
+EOF
+  fi
 }
 
 # ============= FUTURE YUNOHOST HELPER =============

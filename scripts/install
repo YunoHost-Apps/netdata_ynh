@@ -93,9 +93,6 @@ ynh_add_nginx_config
 pushd $NETDATA_TMPDIR
 ./netdata-installer.sh --install /opt --dont-wait
 
-# Add a web_log entry for every YunoHost domain
-netdata_add_yunohost_web_logs
-
 configure_netdata
 
 # Store the app.src file
