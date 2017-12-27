@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+#!/bin/bash
 
 #=================================================
 # GENERIC START
@@ -65,39 +65,49 @@ ynh_add_nginx_config
 
 ynh_install_app_dependencies $pkg_dependencies
 
-#=================================================
-# DOWNLOAD, CHECK AND UNPACK SOURCE
-#=================================================
+installed_version=$(cat /opt/netdata/etc/netdata/app.src | grep SOURCE_URL | sed "s|.*/v\(.*\)/.*|\1|g")
+version_to_install=$(cat ../conf/app.src | grep SOURCE_URL | sed "s|.*/v\(.*\)/.*|\1|g")
 
-# Download, check integrity, uncompress and patch the source from app.src
-NETDATA_TMPDIR=$(mktemp -d)
-ynh_setup_source "$NETDATA_TMPDIR"
+if [ "$installed_version" != "$version_to_install" ] ; then 
+  #=================================================
+  # DOWNLOAD, CHECK AND UNPACK SOURCE
+  #=================================================
 
-#=================================================
-# SPECIFIC UPGRADE
-#=================================================
+  # Download, check integrity, uncompress and patch the source from app.src
+  NETDATA_TMPDIR=$(mktemp -d)
+  ynh_setup_source "$NETDATA_TMPDIR"
 
-# signal netdata to start saving its database
-# this is handy if your database is big
-pids=$(pidof netdata)
-[ ! -z "${pids}" ] && kill -USR1 ${pids}
+  #=================================================
+  # SPECIFIC UPGRADE
+  #=================================================
 
-# create a temporary file for the log
-tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
-# open fd 3 and send it to tmp
-exec 3>${tmp}
-    
-# Launch netdata installation in /opt directory
-pushd $NETDATA_TMPDIR
-# Remove previous service definition (specific 1.8.0 upgrade)
-rm -f /etc/systemd/system/netdata.service
+  # signal netdata to start saving its database
+  # this is handy if your database is big
+  pids=$(pidof netdata)
+  [ ! -z "${pids}" ] && kill -USR1 ${pids}
 
-./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+  # create a temporary file for the log
+  tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
+  # open fd 3 and send it to tmp
+  exec 3>${tmp}
+      
+  # Launch netdata installation in /opt directory
+  pushd $NETDATA_TMPDIR
+  # Remove previous service definition (specific 1.8.0 upgrade)
+  rm -f /etc/systemd/system/netdata.service
 
+  ./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+
+  # Store the uninstaller for the removal script
+  mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
+
+  popd
+fi
+
+# Specific configuration
 configure_netdata
 
 # Store the app.src file
-popd
 cp ../conf/app.src /opt/netdata/etc/netdata
 
 #=================================================

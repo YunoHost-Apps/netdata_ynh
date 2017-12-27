@@ -34,9 +34,6 @@ configure_netdata() {
 
   # Restart NetData
   systemctl restart netdata
-
-  # Store the uninstaller for the removal script
-  [ -f ./netdata-uninstaller.sh ] && mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
 }
 
 # Add a web_log entry for every YunoHost domain
