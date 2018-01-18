@@ -22,10 +22,12 @@ configure_netdata() {
     flush privileges;"
   fi
 
-  # Give dovecot privileges to netdata user to monitor Dovecot
-  # Need dovecot 2.2.16+
-  setfacl -m u:netdata:rw /var/run/dovecot/stats
-
+  if type "setfacl" > /dev/null ; then
+    # Give dovecot privileges to netdata user to monitor Dovecot
+    # Need dovecot 2.2.16+
+    setfacl -m u:netdata:rw /var/run/dovecot/stats
+  fi
+  
   # Add netdata to the adm group to access web logs
   usermod -a -G adm netdata
 
