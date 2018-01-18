@@ -25,8 +25,17 @@ disrupting their core function._
 **Further recommendations:**
 We don't allow YunoHost packages to make sensible changes to system files. So here are further customizations you can make to allow more monitoring:
 
-* Nginx: 
-  * requests/connections: follow [these recommandations](https://github.com/firehol/netdata/tree/master/python.d#nginx) to enable `/stab_status` (for example by putting the `location` section in `/etc/nginx/conf.d/yunohost_admin.conf`
+* Nginx:
+  * requests/connections: follow [these recommandations](https://github.com/firehol/netdata/tree/master/python.d#nginx) to enable `/stab_status`; for example by putting this `location` section in `/etc/nginx/conf.d/yunohost_admin.conf`:
+```
+location /stub_status {
+  stub_status on;
+  # Security: Only allow access from the IP below.
+  allow 127.0.0.1;
+  # Deny anyone else
+  deny all;
+ }
+```
   * weblogs: you can monitor all your nginx weblogs for errors; follow [these recommendations](https://github.com/firehol/netdata/tree/master/python.d#nginx_log)
 * phpfpm: follow [these recommandations](https://github.com/firehol/netdata/tree/master/python.d#phpfpm)
 
