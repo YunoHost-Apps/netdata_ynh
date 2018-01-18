@@ -22,6 +22,7 @@ ynh_abort_if_errors
 
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
+admin=$YNH_APP_ARG_ADMIN
 is_public=$YNH_APP_ARG_IS_PUBLIC
 
 app=$YNH_APP_INSTANCE_NAME
@@ -44,6 +45,7 @@ ynh_webpath_register $app $domain $path_url
 
 ynh_app_setting_set $app domain $domain
 ynh_app_setting_set $app path $path_url
+ynh_app_setting_set $app admin $admin
 ynh_app_setting_set $app is_public $is_public
 
 #=================================================
@@ -76,7 +78,7 @@ then
 else
   # Move prefix comment #for-subdir at end of lines
   ynh_replace_string "#for-subdir\(.*\)" "\1 #for-subdir" $nginx_conf
-fi  
+fi
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
@@ -116,6 +118,8 @@ if [ $is_public -eq 1 ]; then
   ynh_app_setting_set "$app" unprotected_uris "/"
 fi
 
+# Add direct access in the portal to admin only
+yunohost app addaccess --users=$admin $app
 
 #=================================================
 # RELOAD NGINX

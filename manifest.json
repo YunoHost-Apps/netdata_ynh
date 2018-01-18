@@ -50,6 +50,15 @@
                     "fr": "Est-ce une application publique ?"
                 },
                 "default": false
+            },
+            {
+                "name": "admin",
+                "type": "user",
+                "ask": {
+                    "en": "Choose the only allowed user",
+                    "fr": "Choisissez l'unique utilisateur autorisé"
+                },
+                "example": "johndoe"
             }
         ]
     }
