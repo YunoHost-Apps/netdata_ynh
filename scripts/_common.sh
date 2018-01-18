@@ -8,6 +8,12 @@ pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-
 # Configure NetData
 configure_netdata() {
 
+  # Set server as registry serveur
+  sed -i "/^\[registry\]$/,/^\[/ {
+    s/# enabled = no/enabled = yes/
+    s@# registry to announce = https://registry.my-netdata.io@registry to announce = https://$domain$path_url@
+  }" /opt/netdata/etc/netdata/netdata.conf
+
   # Add a web_log entry for every YunoHost domain
   netdata_add_yunohost_web_logs
   

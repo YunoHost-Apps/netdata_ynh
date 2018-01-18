@@ -83,6 +83,10 @@ then
   fi
   # Calculate and store the nginx config file checksum
   ynh_store_file_checksum "$nginx_conf_path"
+
+  # Change registry link
+  ynh_replace_string "registry to announce = https://$old_domain$old_path" "registry to announce = https://$new_domain$new_path" /opt/netdata/etc/netdata/netdata.conf
+  systemctl restart netdata
 fi
 
 # Change the domain for nginx
