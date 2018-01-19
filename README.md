@@ -38,6 +38,7 @@ location /stub_status {
 ```
   * weblogs: you can monitor all your nginx weblogs for errors; follow [these recommendations](https://github.com/firehol/netdata/tree/master/python.d#nginx_log)
 * phpfpm: follow [these recommandations](https://github.com/firehol/netdata/tree/master/python.d#phpfpm)
+* NetData registry: set the instance as its own NetData registry server to avoid leaking any information by default
 
 It has been tested on x86_64 and ARM.
 

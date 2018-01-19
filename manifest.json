@@ -6,7 +6,7 @@
         "en": "real-time performance and health monitoring",
         "fr": "Monitoring serveur en temps reel"
     },
-    "version": "1.9.0-2",
+    "version": "1.9.0-3",
     "url": "http://my-netdata.io/",
     "license": "GPL-3.0",
     "maintainer": {
@@ -55,8 +55,8 @@
                 "name": "admin",
                 "type": "user",
                 "ask": {
-                    "en": "Choose the only allowed user",
-                    "fr": "Choisissez l'unique utilisateur autorisé"
+                    "en": "Choose the only user initially allowed (others can be added later)",
+                    "fr": "Choisissez l'unique utilisateur autorisé initialement (d'autres peuvent être ajoutés ultérieurement)"
                 },
                 "example": "johndoe"
             }
