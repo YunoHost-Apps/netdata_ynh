@@ -1,8 +1,8 @@
 NetData for YunoHost
 ---------------------
 
-[![Install Piwigo with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=piwigo)
-[![Integration level](https://dash.yunohost.org/integration/piwigo.svg)](https://ci-apps.yunohost.org/jenkins/job/piwigo%20%28Community%29/lastBuild/consoleFull)  
+[![Install NetData with YunoHost](https://install-app.yunohost.org/install-with-yunohost.png)](https://install-app.yunohost.org/?app=netdata)
+[![Integration level](https://dash.yunohost.org/integration/netdata.svg)](https://ci-apps.yunohost.org/jenkins/job/netdata%20%28Community%29/lastBuild/consoleFull)  
 
 
 [NetData](http://my-netdata.io/) is a system for **distributed real-time performance and health monitoring**.
