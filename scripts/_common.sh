@@ -3,7 +3,7 @@
 # Common variables
 #
 
-pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python-mysqldb libipmimonitoring-dev acl python-psycopg2"
+pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python-mysqldb libipmimonitoring-dev acl python-psycopg2 python-pymongo"
 
 # Configure NetData
 configure_netdata() {
@@ -16,7 +16,7 @@ configure_netdata() {
 
   # Add a web_log entry for every YunoHost domain
   netdata_add_yunohost_web_logs
-  
+
   # If PostgreSQL is installed, add a PostgreSQL entry using instance password
   netdata_add_yunohost_postgres_configuration
 
@@ -33,7 +33,7 @@ configure_netdata() {
     # Need dovecot 2.2.16+
     setfacl -m u:netdata:rw /var/run/dovecot/stats
   fi
-  
+
   # Add netdata to the adm group to access web logs
   usermod -a -G adm netdata
 
