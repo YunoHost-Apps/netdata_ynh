@@ -1,3 +1,3 @@
-SOURCE_URL=https://github.com/firehol/netdata/releases/download/v1.10.0/netdata-1.10.0.tar.gz
-SOURCE_SUM=2863ddfd3e54fff417af8418d1261188f6f4c2c5bd7d74309691c9b8ec88232d
+SOURCE_URL=https://github.com/firehol/netdata/releases/download/v1.11.0/netdata-1.11.0.tar.gz
+SOURCE_SUM=c42c8411c22c72e3e52fed38d7b9537bcfaf568d01e9c1e35ec645490627619d
 SOURCE_FORMAT=tar.gz
