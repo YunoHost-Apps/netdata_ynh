@@ -14,6 +14,10 @@ configure_netdata() {
     s@# registry to announce = https://registry.my-netdata.io@registry to announce = https://$domain$path_url@
   }" /opt/netdata/etc/netdata/netdata.conf
 
+#  Opt-out from sending anonymous statistics
+# (see https://docs.netdata.cloud/docs/anonymous-statistics/#opt-out)
+touch /opt/netdata/etc/netdata/.opt-out-from-anonymous-statistics
+
   # Add a web_log entry for every YunoHost domain
   netdata_add_yunohost_web_logs
 
