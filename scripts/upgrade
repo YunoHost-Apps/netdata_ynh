@@ -54,7 +54,7 @@ then
 else
   # Move prefix comment #for-subdir at end of lines
   ynh_replace_string "#for-subdir\(.*\)" "\1 #for-subdir" $nginx_conf
-fi  
+fi
 
 # Create a dedicated nginx config
 ynh_add_nginx_config
@@ -68,7 +68,7 @@ ynh_install_app_dependencies $pkg_dependencies
 installed_version=$(cat /opt/netdata/etc/netdata/app.src | grep SOURCE_URL | sed "s|.*/v\(.*\)/.*|\1|g")
 version_to_install=$(cat ../conf/app.src | grep SOURCE_URL | sed "s|.*/v\(.*\)/.*|\1|g")
 
-if [ "$installed_version" != "$version_to_install" ] ; then 
+if [ "$installed_version" != "$version_to_install" ] ; then
   #=================================================
   # DOWNLOAD, CHECK AND UNPACK SOURCE
   #=================================================
@@ -90,7 +90,7 @@ if [ "$installed_version" != "$version_to_install" ] ; then
   tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
   # open fd 3 and send it to tmp
   exec 3>${tmp}
-      
+
   # Launch netdata installation in /opt directory
   pushd $NETDATA_TMPDIR
   # Remove previous service definition (specific 1.8.0 upgrade)
@@ -98,10 +98,7 @@ if [ "$installed_version" != "$version_to_install" ] ; then
 
   ./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 
-  # Store the uninstaller for the removal script
-  mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
-
-  popd
+    popd
 fi
 
 # Specific configuration
@@ -126,4 +123,3 @@ fi
 #=================================================
 
 systemctl reload nginx
-
