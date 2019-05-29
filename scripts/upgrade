@@ -99,6 +99,9 @@ if [ "$installed_version" != "$version_to_install" ] ; then
   ./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 
     popd
+    
+  # close fd 3
+  exec 3<&-
 fi
 
 # Specific configuration
