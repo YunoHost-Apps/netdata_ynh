@@ -1,4 +1,4 @@
-SOURCE_URL=https://raw.githubusercontent.com/netdata/netdata/v1.12.2/packaging/installer/netdata-uninstaller.sh
-SOURCE_SUM=a91970882dd90fd3b2352be185c6df9fc1b0ecda9e08677a1f47a0fd281a7615
+SOURCE_URL=https://raw.githubusercontent.com/netdata/netdata/v1.15.0/packaging/installer/netdata-uninstaller.sh
+SOURCE_SUM=a4727069b47138cea5c466bc902934545841c88dc5f641728ef0feb921efd218
 SOURCE_FILENAME=netdata-uninstaller.sh
 SOURCE_EXTRACT=false
