@@ -95,9 +95,6 @@ ynh_add_nginx_config
 pushd $NETDATA_TMPDIR
 ./netdata-installer.sh --install /opt --dont-wait
 
-# Store the uninstaller for the removal script
-mv ./netdata-uninstaller.sh /opt/netdata/etc/netdata
-
 configure_netdata
 
 # Store the app.src file
