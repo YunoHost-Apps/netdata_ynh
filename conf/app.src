@@ -1,3 +1,3 @@
-SOURCE_URL=https://github.com/netdata/netdata/releases/download/v1.18.0/netdata-v1.18.0.tar.gz
-SOURCE_SUM=0798bed1569a98de4f99cee8b5b318ebbfdd41be55319d8839d0d5e64717c2ab
+SOURCE_URL=https://github.com/netdata/netdata/releases/download/v1.19.0/netdata-v1.19.0.tar.gz
+SOURCE_SUM=36c46bd95c0d8138e2f1a886c9b9fb6a9fd22fbf9d3097420c10b868ed23e355
 SOURCE_FORMAT=tar.gz
