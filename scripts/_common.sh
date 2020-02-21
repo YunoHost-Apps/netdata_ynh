@@ -3,7 +3,7 @@
 # Common variables
 #
 
-pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python-mysqldb libipmimonitoring-dev acl python-psycopg2 python-pymongo"
+pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python-mysqldb libipmimonitoring-dev acl python-psycopg2 python-pymongo libuv1-dev"
 
 # Configure NetData
 configure_netdata() {
@@ -66,6 +66,7 @@ ${domain_label}_log:
 EOF
     done
   fi
+  chgrp netdata $web_log_file
 }
 
 # If PostgreSQL is installed, add a PostgreSQL entry using instance password
@@ -85,6 +86,7 @@ yunohost:
     port     : 5432
 EOF
   fi
+  chgrp netdata $postgres_file
 }
 
 # ============= FUTURE YUNOHOST HELPER =============
