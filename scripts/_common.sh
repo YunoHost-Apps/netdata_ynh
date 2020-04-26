@@ -35,7 +35,14 @@ touch /opt/netdata/etc/netdata/.opt-out-from-anonymous-statistics
   if type "setfacl" > /dev/null ; then
     # Give dovecot privileges to netdata user to monitor Dovecot
     # Need dovecot 2.2.16+
+    if [ -f /var/run/dovecot/stats ] ; then
+      # Until Debian Strech
     setfacl -m u:netdata:rw /var/run/dovecot/stats
+  fi
+    if [ -f /var/run/dovecot/old-stats ] ; then
+      # From Debian Buster
+      setfacl -m u:netdata:rw /var/run/dovecot/old-stats
+    fi
   fi
 
   # Add netdata to the adm group to access web logs
