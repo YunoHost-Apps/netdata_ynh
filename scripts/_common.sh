@@ -37,8 +37,8 @@ touch /opt/netdata/etc/netdata/.opt-out-from-anonymous-statistics
     # Need dovecot 2.2.16+
     if [ -f /var/run/dovecot/stats ] ; then
       # Until Debian Strech
-    setfacl -m u:netdata:rw /var/run/dovecot/stats
-  fi
+      setfacl -m u:netdata:rw /var/run/dovecot/stats
+    fi
     if [ -f /var/run/dovecot/old-stats ] ; then
       # From Debian Buster
       setfacl -m u:netdata:rw /var/run/dovecot/old-stats
@@ -94,16 +94,4 @@ yunohost:
 EOF
   fi
   chgrp netdata $postgres_file
-}
-
-# ============= FUTURE YUNOHOST HELPER =============
-# Delete a file checksum from the app settings
-#
-# $app should be defined when calling this helper
-#
-# usage: ynh_remove_file_checksum file
-# | arg: file - The file for which the checksum will be deleted
-ynh_delete_file_checksum () {
-	local checksum_setting_name=checksum_${1//[\/ ]/_}	# Replace all '/' and ' ' by '_'
-	ynh_app_setting_delete $app $checksum_setting_name
 }
