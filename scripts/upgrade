@@ -115,10 +115,12 @@ cp ../conf/app.src /opt/netdata/etc/netdata
 #=================================================
 # SETUP SSOWAT
 #=================================================
-# If app is public, add url to SSOWat conf as skipped_uris
+
+# Make app public if necessary
 if [[ $is_public -eq 1 ]]; then
-  # See install script
-  ynh_app_setting_set "$app" unprotected_uris "/"
+	# Everyone can access the app.
+	# The "main" permission is automatically created before the install script.
+	ynh_permission_update --permission "main" --add "visitors"
 fi
 
 #=================================================
