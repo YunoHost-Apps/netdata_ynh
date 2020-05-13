@@ -3,7 +3,7 @@
 # Common variables
 #
 
-pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python-mysqldb libipmimonitoring-dev acl python-psycopg2 python-pymongo libuv1-dev liblz4-dev libjudy-dev libssl-dev cmake libjson-c-dev"
+pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python-mysqldb libipmimonitoring-dev acl python-psycopg2 python-pymongo libuv1-dev liblz4-dev libjudy-dev libssl-dev cmake"
 # Configure NetData
 configure_netdata() {
 
