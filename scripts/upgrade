@@ -12,63 +12,68 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
+ynh_script_progression --message="Loading installation settings..." --weight=1
 
 app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get $app domain)
-path_url=$(ynh_app_setting_get $app path)
-is_public=$(ynh_app_setting_get $app is_public)
+domain=$(ynh_app_setting_get --app=$app --key=domain)
+path_url=$(ynh_app_setting_get --app=$app --key=path)
+admin=$(ynh_app_setting_get --app=$app --key=admin)
+is_public=$(ynh_app_setting_get --app=$app --key=is_public)
+final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
+#=================================================
+# CHECK VERSION
+#=================================================
+
+upgrade_type=$(ynh_check_app_version_changed)
+
+#=================================================
+# ENSURE DOWNWARD COMPATIBILITY
+#=================================================
+ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
+
+# Fix is_public as a boolean value
+if [ "$is_public" = "Yes" ]; then
+	ynh_app_setting_set --app=$app --key=is_public --value=1
+	is_public=1
+elif [ "$is_public" = "No" ]; then
+	ynh_app_setting_set --app=$app --key=is_public --value=0
+	is_public=0
+fi
+
+# If final_path doesn't exist, create it
+if [ -z "$final_path" ]; then
+	final_path=/var/www/$app
+	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+fi
 
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
+ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=3
 
-ynh_backup_before_upgrade	# Backup the current version of the app
+# Backup the current version of the app
+ynh_backup_before_upgrade
 ynh_clean_setup () {
-	ynh_restore_upgradebackup	# restore it if the upgrade fails
+	# restore it if the upgrade fails
+	ynh_restore_upgradebackup
 }
-ynh_abort_if_errors	# Active trap to stop script execution if an error occurs
-
-#=================================================
-# CHECK THE PATH
-#=================================================
-
-# Normalize the URL path syntax
-path_url=$(ynh_normalize_url_path $path_url)
+# Exit if an error occurs during the execution of the script
+ynh_abort_if_errors
 
 #=================================================
 # STANDARD UPGRADE STEPS
 #=================================================
+
 #=================================================
-# NGINX CONFIGURATION
+# DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-nginx_conf="../conf/nginx.conf"
-if [ "$path_url" = "/" ]
+if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
-  # Handle root path, avoid double slash.
-  # Temporary fix, in waiting for an upgrade of the helper. (#361)
-  path_url_slash_less=${path_url%/}
-  ynh_replace_string "__PATH__/" "$path_url_slash_less/" $nginx_conf
-else
-  # Move prefix comment #for-subdir at end of lines
-  ynh_replace_string "#for-subdir\(.*\)" "\1 #for-subdir" $nginx_conf
-fi
+	ynh_script_progression --message="Upgrading source files..." --weight=180
 
-# Create a dedicated nginx config
-ynh_add_nginx_config
-
-#=================================================
-# UPGRADE DEPENDENCIES
-#=================================================
-
-ynh_install_app_dependencies $pkg_dependencies
-
-installed_version=$(cat /opt/netdata/etc/netdata/app.src | grep SOURCE_URL | sed "s|.*/v\(.*\)/.*|\1|g")
-version_to_install=$(cat ../conf/app.src | grep SOURCE_URL | sed "s|.*/v\(.*\)/.*|\1|g")
-
-if [ "$installed_version" != "$version_to_install" ] ; then
   #=================================================
   # DOWNLOAD, CHECK AND UNPACK SOURCE
   #=================================================
@@ -93,12 +98,8 @@ if [ "$installed_version" != "$version_to_install" ] ; then
 
   # Launch netdata installation in /opt directory
   pushd $NETDATA_TMPDIR
-  # Remove previous service definition (specific 1.8.0 upgrade)
-  rm -f /etc/systemd/system/netdata.service
-
   ./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
-
-    popd
+  popd
     
   # close fd 3
   exec 3<&-
@@ -111,10 +112,28 @@ configure_netdata
 cp ../conf/app.src /opt/netdata/etc/netdata
 
 #=================================================
+# NGINX CONFIGURATION
+#=================================================
+ynh_script_progression --message="Upgrading nginx web server configuration..." --weight=1
+
+# Create a dedicated nginx config
+ynh_add_nginx_config
+
+#=================================================
+# UPGRADE DEPENDENCIES
+#=================================================
+ynh_script_progression --message="Upgrading dependencies..." --weight=7
+
+ynh_install_app_dependencies $pkg_dependencies
+
+#=================================================
 # GENERIC FINALIZATION
+#=================================================
+
 #=================================================
 # SETUP SSOWAT
 #=================================================
+ynh_script_progression --message="Upgrading SSOwat configuration..." --weight=1
 
 # Make app public if necessary
 if [[ $is_public -eq 1 ]]; then
@@ -124,7 +143,21 @@ if [[ $is_public -eq 1 ]]; then
 fi
 
 #=================================================
+# START SYSTEMD SERVICE
+#=================================================
+ynh_script_progression --message="Starting a systemd service..." --weight=1
+
+ynh_systemd_action --service_name=$app --action="restart" --log_path="/opt/$app/var/log/$app/error.log"
+
+#=================================================
 # RELOAD NGINX
 #=================================================
+ynh_script_progression --message="Reloading nginx web server..." --weight=1
 
-systemctl reload nginx
+ynh_systemd_action --service_name=nginx --action=reload
+
+#=================================================
+# END OF SCRIPT
+#=================================================
+
+ynh_script_progression --message="Upgrade of $app completed" --last

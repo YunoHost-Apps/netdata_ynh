@@ -1,9 +1,16 @@
 #!/bin/bash
-#
-# Common variables
-#
 
+#=================================================
+# COMMON VARIABLES
+#=================================================
+
+# dependencies used by the app
 pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python-mysqldb libipmimonitoring-dev acl python-psycopg2 python-pymongo libuv1-dev liblz4-dev libjudy-dev libssl-dev cmake"
+
+#=================================================
+# PERSONAL HELPERS
+#=================================================
+
 # Configure NetData
 configure_netdata() {
 
@@ -13,9 +20,9 @@ configure_netdata() {
     s@# registry to announce = https://registry.my-netdata.io@registry to announce = https://$domain$path_url@
   }" /opt/netdata/etc/netdata/netdata.conf
 
-#  Opt-out from sending anonymous statistics
-# (see https://docs.netdata.cloud/docs/anonymous-statistics/#opt-out)
-touch /opt/netdata/etc/netdata/.opt-out-from-anonymous-statistics
+  #  Opt-out from sending anonymous statistics
+  # (see https://docs.netdata.cloud/docs/anonymous-statistics/#opt-out)
+  touch /opt/netdata/etc/netdata/.opt-out-from-anonymous-statistics
 
   # Add a web_log entry for every YunoHost domain
   netdata_add_yunohost_web_logs
@@ -24,9 +31,9 @@ touch /opt/netdata/etc/netdata/.opt-out-from-anonymous-statistics
   netdata_add_yunohost_postgres_configuration
 
   # Create netdata user to monitor MySQL (if needed)
-  is_mysql_user_existing=$(ynh_mysql_execute_as_root "select user from mysql.user where user = 'netdata';")
+  is_mysql_user_existing=$(ynh_mysql_execute_as_root --sql="select user from mysql.user where user = 'netdata';")
   if [ -z "$is_mysql_user_existing" ] ; then
-    ynh_mysql_execute_as_root "create user 'netdata'@'localhost';
+    ynh_mysql_execute_as_root --sql="create user 'netdata'@'localhost';
     grant usage on *.* to 'netdata'@'localhost' with grant option;
     flush privileges;"
   fi
@@ -46,12 +53,6 @@ touch /opt/netdata/etc/netdata/.opt-out-from-anonymous-statistics
 
   # Add netdata to the adm group to access web logs
   usermod -a -G adm netdata
-
-  # Declare service for YunoHost monitoring
-  yunohost service add netdata --log "/opt/netdata/var/log/netdata/error.log" "/opt/netdata/var/log/netdata/access.log" "/opt/netdata/var/log/netdata/debug.log"
-
-  # Restart NetData
-  systemctl restart netdata
 }
 
 # Add a web_log entry for every YunoHost domain
