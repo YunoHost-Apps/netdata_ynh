@@ -26,7 +26,6 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 ynh_script_progression --message="Loading installation settings..." --time --weight=1
 
-# Needed for helper "ynh_add_nginx_config"
 final_path=$(ynh_app_setting_get --app=$app --key=final_path)
 
 #=================================================
@@ -114,7 +113,7 @@ ynh_replace_string --match_string="registry to announce = https://$old_domain$ol
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=$app --action="restart" --log_path="/opt/$app/var/log/$app/error.log"
+ynh_systemd_action --service_name=$app --action="restart" --log_path="$final_path/var/log/$app/error.log"
 
 #=================================================
 # RELOAD NGINX

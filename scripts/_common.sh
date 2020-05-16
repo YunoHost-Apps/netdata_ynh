@@ -18,11 +18,11 @@ configure_netdata() {
   sed -i "/^\[registry\]$/,/^\[/ {
     s/# enabled = no/enabled = yes/
     s@# registry to announce = https://registry.my-netdata.io@registry to announce = https://$domain$path_url@
-  }" /opt/netdata/etc/netdata/netdata.conf
+  }" $final_path/etc/netdata/netdata.conf
 
   #  Opt-out from sending anonymous statistics
   # (see https://docs.netdata.cloud/docs/anonymous-statistics/#opt-out)
-  touch /opt/netdata/etc/netdata/.opt-out-from-anonymous-statistics
+  touch $final_path/etc/netdata/.opt-out-from-anonymous-statistics
 
   # Add a web_log entry for every YunoHost domain
   netdata_add_yunohost_web_logs
@@ -57,9 +57,9 @@ configure_netdata() {
 
 # Add a web_log entry for every YunoHost domain
 netdata_add_yunohost_web_logs () {
-  local web_log_file="/opt/netdata/etc/netdata/python.d/web_log.conf"
+  local web_log_file="$final_path/etc/netdata/python.d/web_log.conf"
   if [ ! -f $web_log_file ] ; then
-    cp /opt/netdata/etc/netdata/orig/python.d/web_log.conf $web_log_file
+    cp $final_path/etc/netdata/orig/python.d/web_log.conf $web_log_file
   fi
   if [ -z "$(grep "YUNOHOST" $web_log_file)" ] ; then
     echo "# ------------YUNOHOST DOMAINS---------------" >> $web_log_file
@@ -78,9 +78,9 @@ EOF
 
 # If PostgreSQL is installed, add a PostgreSQL entry using instance password
 netdata_add_yunohost_postgres_configuration () {
-  local postgres_file="/opt/netdata/etc/netdata/python.d/postgres.conf"
+  local postgres_file="$final_path/etc/netdata/python.d/postgres.conf"
   if [ ! -f $postgres_file ] ; then
-    cp /opt/netdata/etc/netdata/orig/python.d/postgres.conf $postgres_file
+    cp $final_path/etc/netdata/orig/python.d/postgres.conf $postgres_file
   fi
   if [ -f /etc/yunohost/psql ] && [ -z "$(grep "yunohost:" $postgres_file)" ] ; then
      cat >> $postgres_file <<EOF

@@ -36,16 +36,16 @@ domain=$(ynh_app_setting_get --app=$app --key=domain)
 #=================================================
 # STOP SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Stopping a systemd service..." --weight=1
+ynh_script_progression --message="Stopping a systemd service..." --weight=2
 
-ynh_systemd_action --service_name=$app --action="stop" --log_path="/opt/$app/var/log/$app/error.log"
+ynh_systemd_action --service_name=$app --action="stop" --log_path="$final_path/var/log/$app/error.log"
 
 #=================================================
 # BACKUP THE APP MAIN DIR
 #=================================================
 ynh_script_progression --message="Backing up Netdata configuration directory..." --weight=1
 
-ynh_backup --src_path="/opt/netdata/etc/netdata"
+ynh_backup --src_path="$final_path/etc/netdata"
 
 #=================================================
 # BACKUP THE NGINX CONFIGURATION
@@ -61,9 +61,9 @@ ynh_backup --src_path="/etc/nginx/conf.d/$domain.d/$app.conf"
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression --message="Starting a systemd service..." --weight=2
 
-ynh_systemd_action --service_name=$app --action="start" --log_path="/opt/$app/var/log/$app/error.log"
+ynh_systemd_action --service_name=$app --action="start" --log_path="$final_path/var/log/$app/error.log"
 
 #=================================================
 # END OF SCRIPT

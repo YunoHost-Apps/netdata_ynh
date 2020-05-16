@@ -44,7 +44,7 @@ fi
 
 # If final_path doesn't exist, create it
 if [ -z "$final_path" ]; then
-	final_path=/var/www/$app
+	final_path=/opt/$app
 	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 fi
 
@@ -61,6 +61,13 @@ ynh_clean_setup () {
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
+
+#=================================================
+# CHECK THE PATH
+#=================================================
+
+# Normalize the URL path syntax
+path_url=$(ynh_normalize_url_path --path_url=$path_url)
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -108,9 +115,6 @@ fi
 # Specific configuration
 configure_netdata
 
-# Store the app.src file
-cp ../conf/app.src /opt/netdata/etc/netdata
-
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
@@ -147,7 +151,7 @@ fi
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=$app --action="restart" --log_path="/opt/$app/var/log/$app/error.log"
+ynh_systemd_action --service_name=$app --action="restart" --log_path="$final_path/var/log/$app/error.log"
 
 #=================================================
 # RELOAD NGINX

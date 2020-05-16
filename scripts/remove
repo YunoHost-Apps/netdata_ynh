@@ -54,8 +54,16 @@ chmod +x /tmp/$UNINSTALL_SCRIPT
 # Move outside the directory (which will be removed)
 cd /tmp
 
+# create a temporary file for the log
+tmp=$(mktemp /tmp/netdata-uninstaller-log-XXXXXX.log)
+# open fd 3 and send it to tmp
+exec 3>${tmp}
+
 # Execute the uninstall script
-./${UNINSTALL_SCRIPT} --yes --force --env /opt/netdata/etc/netdata/.environment
+./${UNINSTALL_SCRIPT} --yes --force --env $final_path/etc/netdata/.environment >&3 2>&3
+
+# close fd 3
+exec 3<&-
 
 # Remove MySQL netdata user
 ynh_mysql_execute_as_root "drop user 'netdata'@'localhost'; flush privileges;"

@@ -34,15 +34,6 @@ app=$YNH_APP_INSTANCE_NAME
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
-### About --weight and --time
-### ynh_script_progression will show to your final users the progression of each scripts.
-### In order to do that, --weight will represent the relative time of execution compared to the other steps in the script.
-### --time is a packager option, it will show you the execution time since the previous call.
-### This option should be removed before releasing your app.
-### Use the execution time, given by --time, to estimate the weight of a step.
-### A common way to do it is to set a weight equal to the execution time in second +1.
-### The execution time is given for the duration since the previous call. So the weight should be applied to this previous call.
-ynh_script_progression --message="Validating installation parameters..." --weight=1
 
 ynh_script_progression --message="Validating installation parameters..." --weight=1
 
@@ -102,16 +93,22 @@ ynh_add_nginx_config
 #=================================================
 
 ynh_script_progression --message="Executing Netdata installer..." --weight=180
+
+# create a temporary file for the log
+tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
+# open fd 3 and send it to tmp
+exec 3>${tmp}
+
 # Launch netdata installation in /opt directory
 pushd $NETDATA_TMPDIR
-./netdata-installer.sh --install /opt --dont-wait
-
-configure_netdata
-
-# Store the app.src file
+./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 popd
-cp ../conf/app.src /opt/netdata/etc/netdata
 
+# close fd 3
+exec 3<&-
+
+# Specific configuration
+configure_netdata
 
 #=================================================
 # GENERIC FINALIZATION
@@ -121,7 +118,7 @@ cp ../conf/app.src /opt/netdata/etc/netdata
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
 
-yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "/opt/netdata/var/log/netdata/error.log" "/opt/netdata/var/log/netdata/access.log" "/opt/netdata/var/log/netdata/debug.log"
+yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
@@ -129,7 +126,7 @@ yunohost service add $app --description "Real-time performance and health monito
 ynh_script_progression --message="Starting a systemd service..." --weight=2
 
 # Start a systemd service
-ynh_systemd_action --service_name=$app --action="restart" --log_path="/opt/$app/var/log/$app/error.log"
+ynh_systemd_action --service_name=$app --action="restart" --log_path="$final_path/var/log/$app/error.log"
 
 
 #=================================================
