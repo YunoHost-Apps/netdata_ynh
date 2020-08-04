@@ -48,6 +48,13 @@ if [ -z "$final_path" ]; then
 	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 fi
 
+# If final_path wrongly refers to /var/www
+# see http://tldp.org/LDP/abs/html/comparison-ops.html for syntax reference
+if [[ $final_path == /var/www* ]]; then
+	final_path=/opt/$app
+	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+fi
+
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
