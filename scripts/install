@@ -101,7 +101,7 @@ exec 3>${tmp}
 
 # Launch netdata installation in /opt directory
 pushd $NETDATA_TMPDIR
-./netdata-installer.sh --install /opt --dont-wait >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+./netdata-installer.sh --install /opt --dont-wait --disable-cloud >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 popd
 
 # close fd 3
