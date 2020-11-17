@@ -13,10 +13,11 @@ _netdata is **fast** and **efficient**, designed to permanently run on all syste
 (**physical** & **virtual** servers, **containers**, **IoT** devices), without
 disrupting their core function._
 
-**Shipped version:** 1.22.1
+**Shipped version:** 1.26.0
 
 **Customization brought by the package:**
 
+* Netdata Cloud functionality disabled
 * grant MySQL statistics access via a `netdata` user
 * nginx root log statistics via putting `netdata` user in the `adm` group
 * Dovecot statistics via giving access to Dovecot stats stocket to `netdata` user (works only with Dovecot 2.2.16+)
