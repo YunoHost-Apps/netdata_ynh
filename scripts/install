@@ -92,7 +92,7 @@ ynh_add_nginx_config
 # SPECIFIC SETUP
 #=================================================
 
-ynh_script_progression --message="Executing Netdata installer..." --weight=180
+ynh_script_progression --message="Executing Netdata installer..." --weight=30
 
 # create a temporary file for the log
 tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
