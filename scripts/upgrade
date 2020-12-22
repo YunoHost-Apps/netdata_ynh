@@ -135,6 +135,12 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 
 #=================================================
+# INTEGRATE SERVICE IN YUNOHOST
+#=================================================
+
+yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
+
+#=================================================
 # SETUP SSOWAT
 #=================================================
 ynh_script_progression --message="Upgrading SSOwat configuration..." --weight=1
