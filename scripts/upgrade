@@ -153,12 +153,6 @@ if [[ $is_public -eq 1 ]]; then
 fi
 
 #=================================================
-# INTEGRATE SERVICE IN YUNOHOST
-#=================================================
-
-yunohost service add $app --description="Real-time performance and health monitoring for systems and applications" --log="$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
-
-#=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=1

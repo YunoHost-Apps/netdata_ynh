@@ -87,7 +87,7 @@ configure_netdata
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
 
-yunohost service add $app --description="Real-time performance and health monitoring for systems and applications" --log="$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
+yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
