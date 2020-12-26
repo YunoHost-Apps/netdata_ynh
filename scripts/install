@@ -92,7 +92,7 @@ ynh_add_nginx_config
 # SPECIFIC SETUP
 #=================================================
 
-ynh_script_progression --message="Executing Netdata installer..." --weight=180
+ynh_script_progression --message="Executing Netdata installer..." --weight=30
 
 # create a temporary file for the log
 tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
@@ -128,7 +128,6 @@ ynh_script_progression --message="Starting a systemd service..." --weight=2
 # Start a systemd service
 ynh_systemd_action --service_name=$app --action="restart" --log_path="$final_path/var/log/$app/error.log"
 
-
 #=================================================
 # SETUP SSOWAT
 #=================================================
@@ -143,7 +142,6 @@ fi
 
 # Add direct access in the portal to admin only
 ynh_permission_update --permission "main" --add "$admin"
-
 
 #=================================================
 # RELOAD NGINX

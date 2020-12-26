@@ -71,7 +71,7 @@ ynh_install_app_dependencies $pkg_dependencies
 # INSTALL AND RESTORE THE APP CONFIGURATION
 #=================================================
 
-ynh_script_progression --message="Reinstalling Netdata..." --weight=180
+ynh_script_progression --message="Reinstalling Netdata..." --weight=18
 
 # Download, check integrity, uncompress and patch the source from app.src
 NETDATA_TMPDIR=$(mktemp -d)
@@ -87,7 +87,7 @@ configure_netdata
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
 
-yunohost service add $app --description "A short description of the app" --log "$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
+yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
