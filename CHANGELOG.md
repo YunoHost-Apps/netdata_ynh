@@ -4,12 +4,16 @@ Changelog
 ## Unreleased
 - Nothing for now...
 
-## [1.28.0~ynh1](https://github.com/YunoHost-Apps/netdata_ynh/pull/57) - 2021-02-05
+## [1.29.3~ynh1](https://github.com/YunoHost-Apps/netdata_ynh/pull/59) - 2021-02-22
+
+#### Changed
+* [Update to 1.29.3](https://github.com/YunoHost-Apps/netdata_ynh/pull/58)
+## [1.29.0~ynh1](https://github.com/YunoHost-Apps/netdata_ynh/pull/57) - 2021-02-05
 
 #### Changed
 * [Update to 1.29.0](https://github.com/YunoHost-Apps/netdata_ynh/pull/56)
 
-## [1.28.0~ynh1](https://github.com/YunoHost-Apps/netdata_ynh/pull/50) - 2020-12-19
+## [1.29.0~ynh1](https://github.com/YunoHost-Apps/netdata_ynh/pull/50) - 2020-12-19
 
 #### Changed
 * [Update to 1.28.0](https://github.com/YunoHost-Apps/netdata_ynh/pull/50)
