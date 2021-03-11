@@ -23,7 +23,7 @@ disrupting their core function._
 * Dovecot statistics via giving access to Dovecot stats stocket to `netdata` user (works only with Dovecot 2.2.16+)
 
 **Further recommendations:**
-We don't allow YunoHost packages to make sensible changes to system files. So here are further customizations you can make to allow more monitoring:
+We don't allow YunoHost packages to make sensitive changes to system files. So here are further customizations you can make to allow more monitoring:
 
 * Nginx:
   * requests/connections: follow [these recommandations](https://github.com/firehol/netdata/tree/master/python.d#nginx) to enable `/stab_status`; for example by putting this `location` section in `/etc/nginx/conf.d/yunohost_admin.conf`:
