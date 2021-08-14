@@ -26,8 +26,9 @@ disrupting their core function._
 We don't allow YunoHost packages to make changes to sensitive system files. So here are further customizations you can make to allow more monitoring:
 
 * Nginx:
-  * requests/connections: follow [these recommandations](https://github.com/firehol/netdata/tree/master/python.d#nginx) to enable `/stab_status`; for example by putting this `location` section in `/etc/nginx/conf.d/yunohost_admin.conf`:
+  * requests/connections: follow [these recommandations](https://github.com/netdata/netdata/tree/master/collectors/python.d.plugin/nginx) to enable `/stab_status`; for example by creating the file `/etc/nginx/conf.d/default.d/netdat_stub.conf` with the following content:
 ```
+# For Netdata
 location /stub_status {
   stub_status on;
   # Security: Only allow access from the IP below.
@@ -36,7 +37,7 @@ location /stub_status {
   deny all;
  }
 ```
-  * weblogs: you can monitor all your nginx weblogs for errors; follow [these recommendations](https://github.com/firehol/netdata/tree/master/python.d#nginx_log)
+* weblogs: you can monitor all your nginx weblogs for errors; follow [these recommendations](https://github.com/firehol/netdata/tree/master/python.d#nginx_log)
 * phpfpm: follow [these recommandations](https://github.com/firehol/netdata/tree/master/python.d#phpfpm)
 * NetData registry: set the instance as its own NetData registry server to avoid leaking any information by default
 

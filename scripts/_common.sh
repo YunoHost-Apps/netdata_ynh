@@ -5,7 +5,7 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python-mysqldb libipmimonitoring-dev acl python-psycopg2 python-pymongo libuv1-dev liblz4-dev libjudy-dev libssl-dev cmake"
+pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python3-mysqldb libipmimonitoring-dev acl python3-psycopg2 python3-pymongo libuv1-dev liblz4-dev libjudy-dev libssl-dev cmake"
 
 #=================================================
 # PERSONAL HELPERS
