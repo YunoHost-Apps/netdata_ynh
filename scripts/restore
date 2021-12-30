@@ -73,12 +73,21 @@ ynh_script_progression --message="Reinstalling Netdata..." --weight=18
 
 # Download, check integrity, uncompress and patch the source from app.src
 NETDATA_TMPDIR=$(mktemp -d)
-ynh_setup_source "$NETDATA_TMPDIR"
+ynh_setup_source --dest_dir="$NETDATA_TMPDIR"
+
+# create a temporary file for the log
+tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
+# open fd 3 and send it to tmp
+exec 3>${tmp}
 
 # Launch netdata installation in /opt directory
 cd $NETDATA_TMPDIR
-./netdata-installer.sh --install /opt --dont-wait
+./netdata-installer.sh --install /opt --dont-wait --disable-cloud >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 
+# close fd 3
+exec 3<&-
+
+# Specific configuration
 configure_netdata
 
 #=================================================
