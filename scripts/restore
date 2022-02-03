@@ -82,7 +82,7 @@ exec 3>${tmp}
 
 # Launch netdata installation in /opt directory
 cd $NETDATA_TMPDIR
-./netdata-installer.sh --install /opt --dont-wait --disable-cloud >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+./netdata-installer.sh --install /opt --dont-wait --disable-cloud --disable-telemetry --stable-channel >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 
 # close fd 3
 exec 3<&-
