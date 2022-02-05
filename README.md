@@ -1,8 +1,8 @@
 NetData for YunoHost
 ---------------------
 
-[![Integration level](https://dash.yunohost.org/integration/netdata.svg)](https://ci-apps.yunohost.org/jenkins/job/netdata%20%28Community%29/lastBuild/consoleFull) ![](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)  
-[![Install NetData with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=netdata)
+[![Integration level](https://dash.yunohost.org/integration/netdata.svg)](https://dash.yunohost.org/appci/app/netdata) ![](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg)  ![](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
+[![Install example with YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=netdata)
 
 [NetData](http://my-netdata.io/) is a system for **distributed real-time performance and health monitoring**.
 It provides **unparalleled insights, in real-time**, of everything happening on the
@@ -13,7 +13,7 @@ _netdata is **fast** and **efficient**, designed to permanently run on all syste
 (**physical** & **virtual** servers, **containers**, **IoT** devices), without
 disrupting their core function._
 
-**Shipped version:** 1.32.1
+**Shipped version:** 1.33.0
 
 **Customization brought by the package:**
 
