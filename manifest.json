@@ -6,7 +6,7 @@
         "en": "Real-time performance and health monitoring",
         "fr": "Monitoring serveur en temps reel"
     },
-    "version": "1.33.0~ynh1",
+    "version": "1.34.1~ynh1",
     "url": "http://my-netdata.io/",
     "license": "GPL-3.0",
     "maintainer": {

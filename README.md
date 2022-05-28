@@ -13,7 +13,7 @@ _netdata is **fast** and **efficient**, designed to permanently run on all syste
 (**physical** & **virtual** servers, **containers**, **IoT** devices), without
 disrupting their core function._
 
-**Shipped version:** 1.33.0
+**Shipped version:** 1.34.1
 
 **Customization brought by the package:**
 
