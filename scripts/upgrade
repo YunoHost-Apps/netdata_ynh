@@ -35,12 +35,14 @@ ynh_script_progression --message="Backing up the app before upgrading (may take 
 # Backup the current version of the app
 ynh_backup_before_upgrade
 ynh_clean_setup () {
-  # restore it if the upgrade fails
-  ynh_restore_upgradebackup
+	# Restore it if the upgrade fails
+	ynh_restore_upgradebackup
 }
 # Exit if an error occurs during the execution of the script
 ynh_abort_if_errors
 
+#=================================================
+# STANDARD UPGRADE STEPS
 #=================================================
 # ENSURE DOWNWARD COMPATIBILITY
 #=================================================
@@ -67,8 +69,6 @@ if ynh_legacy_permissions_exists; then
 fi
 
 #=================================================
-# STANDARD UPGRADE STEPS
-#=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
@@ -76,35 +76,35 @@ if [ "$upgrade_type" == "UPGRADE_APP" ]
 then
 	ynh_script_progression --message="Upgrading source files..." --weight=18
 
-  #=================================================
-  # DOWNLOAD, CHECK AND UNPACK SOURCE
-  #=================================================
+	#=================================================
+	# DOWNLOAD, CHECK AND UNPACK SOURCE
+	#=================================================
 
-  # Download, check integrity, uncompress and patch the source from app.src
-  NETDATA_TMPDIR=$(mktemp -d)
-  ynh_setup_source "$NETDATA_TMPDIR"
+	# Download, check integrity, uncompress and patch the source from app.src
+	NETDATA_TMPDIR=$(mktemp -d)
+	ynh_setup_source "$NETDATA_TMPDIR"
 
-  #=================================================
-  # SPECIFIC UPGRADE
-  #=================================================
+	#=================================================
+	# SPECIFIC UPGRADE
+	#=================================================
 
-  # signal netdata to start saving its database
-  # this is handy if your database is big
-  pids=$(pidof netdata)
-  [ ! -z "${pids}" ] && kill -USR1 ${pids}
+	# signal netdata to start saving its database
+	# this is handy if your database is big
+	pids=$(pidof netdata)
+	[ ! -z "${pids}" ] && kill -USR1 ${pids}
 
-  # create a temporary file for the log
-  tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
-  # open fd 3 and send it to tmp
-  exec 3>${tmp}
+	# create a temporary file for the log
+	tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
+	# open fd 3 and send it to tmp
+	exec 3>${tmp}
 
-  # Launch netdata installation in /opt directory
-  pushd $NETDATA_TMPDIR
-  ./netdata-installer.sh --install /opt --dont-wait --disable-cloud  >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
-  popd
+	# Launch netdata installation in /opt directory
+	pushd $NETDATA_TMPDIR
+		./netdata-installer.sh --install /opt --dont-wait --disable-cloud  >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+	popd
     
-  # close fd 3
-  exec 3<&-
+	# close fd 3
+	exec 3<&-
 fi
 
 # Specific configuration
@@ -115,7 +115,7 @@ configure_netdata
 #=================================================
 ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=1
 
-# Create a dedicated nginx config
+# Create a dedicated NGINX config
 ynh_add_nginx_config
 
 #=================================================
@@ -128,10 +128,9 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 # GENERIC FINALIZATION
 #=================================================
-
-#=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
+ynh_script_progression --message="Integrating service in YunoHost..."
 
 yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
 

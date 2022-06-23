@@ -1,3 +1,7 @@
 SOURCE_URL=https://github.com/netdata/netdata/releases/download/v1.33.0/netdata-v1.33.0.tar.gz
 SOURCE_SUM=d167d4b2d8529119fa4047ae40d22833dac9d360a6ed07c314ba313807c027eb
+SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=tar.gz
+SOURCE_IN_SUBDIR=true
+SOURCE_FILENAME=
+SOURCE_EXTRACT=true
