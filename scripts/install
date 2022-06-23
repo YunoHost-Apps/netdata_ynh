@@ -14,7 +14,6 @@ source /usr/share/yunohost/helpers
 #=================================================
 
 ynh_clean_setup () {
-	### Remove this function if there's nothing to clean before calling the remove script.
 	true
 }
 # Exit if an error occurs during the execution of the script
@@ -26,15 +25,14 @@ ynh_abort_if_errors
 
 domain=$YNH_APP_ARG_DOMAIN
 path_url=$YNH_APP_ARG_PATH
-admin=$YNH_APP_ARG_ADMIN
 is_public=$YNH_APP_ARG_IS_PUBLIC
+admin=$YNH_APP_ARG_ADMIN
 
 app=$YNH_APP_INSTANCE_NAME
 
 #=================================================
 # CHECK IF THE APP CAN BE INSTALLED WITH THESE ARGS
 #=================================================
-
 ynh_script_progression --message="Validating installation parameters..." --weight=1
 
 final_path=/opt/$app
@@ -68,10 +66,6 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 ynh_script_progression --message="Setting up source files..." --weight=11
 
-### `ynh_setup_source` is used to install an app from a zip or tar.gz file,
-### downloaded from an upstream source, like a git repository.
-### `ynh_setup_source` use the file conf/app.src
-
 ynh_app_setting_set --app=$app --key=final_path --value=$final_path
 # Download, check integrity, uncompress and patch the source from app.src
 NETDATA_TMPDIR=$(mktemp -d)
@@ -82,13 +76,14 @@ ynh_setup_source --dest_dir="$NETDATA_TMPDIR"
 #=================================================
 ynh_script_progression --message="Configuring NGINX web server..." --weight=2
 
-# Create a dedicated nginx config
+# Create a dedicated NGINX config
 ynh_add_nginx_config
 
 #=================================================
 # SPECIFIC SETUP
 #=================================================
-
+# EXECUTE NETDATA INSTALLER
+#=================================================
 ynh_script_progression --message="Executing Netdata installer..." --weight=30
 
 # create a temporary file for the log
@@ -98,7 +93,7 @@ exec 3>${tmp}
 
 # Launch netdata installation in /opt directory
 pushd $NETDATA_TMPDIR
-./netdata-installer.sh --install /opt --dont-wait --disable-cloud --disable-telemetry --stable-channel >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+	./netdata-installer.sh --install /opt --dont-wait --disable-cloud --disable-telemetry --stable-channel >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 popd
 
 # close fd 3
@@ -112,6 +107,7 @@ configure_netdata
 #=================================================
 # INTEGRATE SERVICE IN YUNOHOST
 #=================================================
+ynh_script_progression --message="Integrating service in YunoHost..."
 
 yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
 
@@ -129,14 +125,15 @@ ynh_systemd_action --service_name=$app --action="restart" --log_path="$final_pat
 ynh_script_progression --message="Configuring permissions..." --weight=1
 
 # Make app public if necessary
-if [ $is_public -eq 1 ]; then
+if [ $is_public -eq 1 ]
+then
 	# Everyone can access the app.
 	# The "main" permission is automatically created before the install script.
-	ynh_permission_update --permission "main" --add "visitors"
+	ynh_permission_update --permission="main" --add="visitors"
 fi
 
 # Add direct access in the portal to admin only
-ynh_permission_update --permission "main" --add "$admin"
+ynh_permission_update --permission="main" --add="$admin"
 
 #=================================================
 # RELOAD NGINX
