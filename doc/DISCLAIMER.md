@@ -62,7 +62,7 @@ This is what you should expect from Netdata:
 ### General
 
 -   **1s granularity** - The highest possible resolution for all metrics.
--   **Unlimited metrics** - Netdata collects all the available metrics—the more, the better.
+-   **Unlimited metrics** - Netdata collects all the available metricsâ€”the more, the better.
 -   **1% CPU utilization of a single core** - It's unbelievably optimized.
 -   **A few MB of RAM** - The highly-efficient database engine stores per-second metrics in RAM and then "spills"
     historical metrics to disk long-term storage.   
