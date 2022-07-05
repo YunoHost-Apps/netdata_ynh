@@ -8,6 +8,13 @@
     },
     "version": "1.35.1~ynh1",
     "url": "http://my-netdata.io/",
+    "upstream": {
+        "license": "GPL-3.0",
+        "website": "http://my-netdata.io",
+        "demo": "https://learn.netdata.cloud/docs/agent/demo-sites/",
+        "admindoc": "https://learn.netdata.cloud/docs",
+        "code": "https://github.com/netdata/netdata"
+    },
     "license": "GPL-3.0",
     "maintainer": {
         "name": "JimboJoe",
@@ -15,14 +22,14 @@
         "url": ""
     },
     "requirements": {
-    "yunohost": ">= 4.2.0"
+        "yunohost": ">= 4.3.0"
     },
     "multi_instance": false,
     "services": [
         "nginx"
     ],
     "arguments": {
-        "install" : [
+        "install": [
             {
                 "name": "domain",
                 "type": "domain"
