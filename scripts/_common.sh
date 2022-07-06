@@ -57,23 +57,27 @@ configure_netdata() {
 
 # Add a web_log entry for every YunoHost domain
 netdata_add_yunohost_web_logs () {
-  local web_log_file="$final_path/etc/netdata/python.d/web_log.conf"
+  local web_log_file="$final_path/etc/netdata/go.d/web_log.conf"
   if [ ! -f $web_log_file ] ; then
-    cp $final_path/etc/netdata/orig/python.d/web_log.conf $web_log_file
+    cp $final_path/etc/netdata/orig/go.d/web_log.conf $web_log_file
   fi
   if [ -z "$(grep "YUNOHOST" $web_log_file)" ] ; then
     echo "# ------------YUNOHOST DOMAINS---------------" >> $web_log_file
     for domain in $(yunohost domain list --output-as plain); do
       domain_label=${domain//\./_} # Replace "." by "_" for the domain label
       cat >> $web_log_file <<EOF
-${domain_label}_log:
-  name: '${domain_label}'
-  path: '/var/log/nginx/$domain-access.log'
+  - ${domain_label}_log:
+    name: '${domain_label}'
+    path: '/var/log/nginx/$domain-access.log'
 
 EOF
     done
   fi
   chgrp netdata $web_log_file
+  # Manage upgrade case from python to go plugin
+  if [ -f "$final_path/etc/netdata/python.d/web_log.conf" ] ; then
+    ynh_secure_remove --file="$final_path/etc/netdata/python.d/web_log.conf"
+  fi
 }
 
 # If PostgreSQL is installed, add a PostgreSQL entry using instance password
