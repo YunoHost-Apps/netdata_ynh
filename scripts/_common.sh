@@ -63,6 +63,8 @@ netdata_add_yunohost_web_logs () {
   fi
   if [ -z "$(grep "YUNOHOST" $web_log_file)" ] ; then
     echo "# ------------YUNOHOST DOMAINS---------------" >> $web_log_file
+    local domain
+    local domain_label
     for domain in $(yunohost domain list --output-as plain); do
       domain_label=${domain//\./_} # Replace "." by "_" for the domain label
       cat >> $web_log_file <<EOF
