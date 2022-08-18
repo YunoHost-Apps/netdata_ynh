@@ -5,7 +5,7 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python3-mysqldb libipmimonitoring-dev acl python3-psycopg2 python3-pymongo libuv1-dev liblz4-dev libjudy-dev libssl-dev cmake"
+pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python3-mysqldb libipmimonitoring-dev acl python3-pymongo libuv1-dev liblz4-dev libjudy-dev libssl-dev cmake"
 
 #=================================================
 # PERSONAL HELPERS
@@ -84,20 +84,19 @@ EOF
 
 # If PostgreSQL is installed, add a PostgreSQL entry using instance password
 netdata_add_yunohost_postgres_configuration () {
-  local postgres_file="$final_path/etc/netdata/python.d/postgres.conf"
+  local postgres_file="$final_path/etc/netdata/go.d/postgres.conf"
   if [ ! -f $postgres_file ] ; then
-    cp $final_path/etc/netdata/orig/python.d/postgres.conf $postgres_file
+    cp $final_path/etc/netdata/orig/go.d/postgres.conf $postgres_file
   fi
-  if [ -f /etc/yunohost/psql ] && [ -z "$(grep "yunohost:" $postgres_file)" ] ; then
+  if [ -f /etc/yunohost/psql ] && [ -z "$(grep "yunohost" $postgres_file)" ] ; then
      cat >> $postgres_file <<EOF
-yunohost:
-    name     : 'local'
-    database : 'postgres'
-    user     : 'postgres'
-    password : '$(cat /etc/yunohost/psql)'
-    host     : 'localhost'
-    port     : 5432
+  - name: yunohost
+    dsn: 'postgres://postgres:$(cat /etc/yunohost/psql)@localhost:5432/postgres'
 EOF
   fi
   chgrp netdata $postgres_file
+    # Manage upgrade case from python to go plugin
+  if [ -f "$final_path/etc/netdata/python.d/postgres.conf" ] ; then
+    ynh_secure_remove --file="$final_path/etc/netdata/python.d/postgres.conf"
+  fi
 }
