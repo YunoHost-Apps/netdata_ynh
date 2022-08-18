@@ -13,7 +13,8 @@
         "website": "http://my-netdata.io",
         "demo": "https://learn.netdata.cloud/docs/agent/demo-sites/",
         "admindoc": "https://learn.netdata.cloud/docs",
-        "code": "https://github.com/netdata/netdata"
+        "code": "https://github.com/netdata/netdata",
+        "cpe": "cpe:2.3:a:netdata:netdata"
     },
     "license": "GPL-3.0",
     "maintainer": {
