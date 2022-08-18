@@ -28,7 +28,6 @@ disrupting their core function._
 **Shipped version:** 1.36.1~ynh1
 
 
-
 **Demo:** https://learn.netdata.cloud/docs/agent/demo-sites/
 ## Disclaimers / important information
 
