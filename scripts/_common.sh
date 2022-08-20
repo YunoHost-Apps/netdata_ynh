@@ -88,8 +88,9 @@ netdata_add_yunohost_postgres_configuration () {
   if [ ! -f $postgres_file ] ; then
     cp $final_path/etc/netdata/orig/go.d/postgres.conf $postgres_file
   fi
-  if [ -f /etc/yunohost/psql ] && [ -z "$(grep "yunohost" $postgres_file)" ] ; then
+  if [ -f /etc/yunohost/psql ] && [ -z "$(grep "YUNOHOST" $postgres_file)" ] ; then
      cat >> $postgres_file <<EOF
+# ------------ YUNOHOST ---------------
   - name: local
     dsn: 'postgres://postgres:$(cat /etc/yunohost/psql)@localhost:5432/postgres'
 EOF
