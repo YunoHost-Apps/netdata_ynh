@@ -133,7 +133,7 @@ then
 fi
 
 # Add direct access in the portal to admin only
-ynh_permission_update --permission="main" --add="$admin"
+ynh_permission_update --permission="main" --remove="all_users" --add="$admin"
 
 #=================================================
 # RELOAD NGINX
