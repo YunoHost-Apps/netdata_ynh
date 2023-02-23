@@ -5,15 +5,16 @@ It shall NOT be edited by hand.
 
 # NetData pour YunoHost
 
-[![Niveau d'intégration](https://dash.yunohost.org/integration/netdata.svg)](https://dash.yunohost.org/appci/app/netdata) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)  
+[![Niveau d’intégration](https://dash.yunohost.org/integration/netdata.svg)](https://dash.yunohost.org/appci/app/netdata) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
+
 [![Installer NetData avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=netdata)
 
 *[Read this readme in english.](./README.md)*
 
-> *Ce package vous permet d'installer NetData rapidement et simplement sur un serveur YunoHost.
-Si vous n'avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l'installer et en profiter.*
+> *Ce package vous permet d’installer NetData rapidement et simplement sur un serveur YunoHost.
+Si vous n’avez pas YunoHost, regardez [ici](https://yunohost.org/#/install) pour savoir comment l’installer et en profiter.*
 
-## Vue d'ensemble
+## Vue d’ensemble
 
 [NetData](http://my-netdata.io/) is a system for **distributed real-time performance and health monitoring**.
 It provides **unparalleled insights, in real-time**, of everything happening on the
@@ -209,9 +210,9 @@ write a collector for your custom application using our [plugin API](/collectors
 
 ## Documentations et ressources
 
-* Site officiel de l'app : <http://my-netdata.io>
-* Documentation officielle de l'admin : <https://learn.netdata.cloud/docs>
-* Dépôt de code officiel de l'app : <https://github.com/netdata/netdata>
+* Site officiel de l’app : <http://my-netdata.io>
+* Documentation officielle de l’admin : <https://learn.netdata.cloud/docs>
+* Dépôt de code officiel de l’app : <https://github.com/netdata/netdata>
 * Documentation YunoHost pour cette app : <https://yunohost.org/app_netdata>
 * Signaler un bug : <https://github.com/YunoHost-Apps/netdata_ynh/issues>
 
@@ -227,4 +228,4 @@ ou
 sudo yunohost app upgrade netdata -u https://github.com/YunoHost-Apps/netdata_ynh/tree/testing --debug
 ```
 
-**Plus d'infos sur le packaging d'applications :** <https://yunohost.org/packaging_apps>
+**Plus d’infos sur le packaging d’applications :** <https://yunohost.org/packaging_apps>
