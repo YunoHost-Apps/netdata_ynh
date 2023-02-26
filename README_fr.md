@@ -6,6 +6,7 @@ It shall NOT be edited by hand.
 # NetData pour YunoHost
 
 [![Niveau d’intégration](https://dash.yunohost.org/integration/netdata.svg)](https://dash.yunohost.org/appci/app/netdata) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
+
 [![Installer NetData avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=netdata)
 
 *[Read this readme in english.](./README.md)*
