@@ -77,6 +77,9 @@ popd
 # Remove MySQL netdata user
 ynh_mysql_execute_as_root "drop user 'netdata'@'localhost'; flush privileges;"
 
+# Remove main directory
+ynh_secure_remove --file="$final_path"
+
 #=================================================
 # END OF SCRIPT
 #=================================================
