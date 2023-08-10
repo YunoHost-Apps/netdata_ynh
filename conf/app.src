@@ -1,5 +1,5 @@
-SOURCE_URL=https://github.com/netdata/netdata/releases/download/v1.41.0/netdata-v1.41.0.tar.gz
-SOURCE_SUM=8372d86ab88f7ec0b0b714dabbf2d03cf819d5db9bf4d8ae612f1a3dbc96b9a0
+SOURCE_URL=https://github.com/netdata/netdata/releases/download/v1.42.0/netdata-v1.42.0.tar.gz
+SOURCE_SUM=10c5685ba184a348fb75d0ce2d011bf9227774a07de60197a81b04373d5ea333
 SOURCE_SUM_PRG=sha256sum
 SOURCE_FORMAT=tar.gz
 SOURCE_IN_SUBDIR=true
