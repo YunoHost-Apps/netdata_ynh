@@ -26,7 +26,7 @@ _netdata is **fast** and **efficient**, designed to permanently run on all syste
 disrupting their core function._
 
 
-**Shipped version:** 1.42.3~ynh1
+**Shipped version:** 1.43.0~ynh1
 
 **Demo:** https://learn.netdata.cloud/docs/agent/demo-sites/
 ## Disclaimers / important information
@@ -213,7 +213,6 @@ write a collector for your custom application using our [plugin API](/collectors
 * Official app website: <http://my-netdata.io>
 * Official admin documentation: <https://learn.netdata.cloud/docs>
 * Upstream app code repository: <https://github.com/netdata/netdata>
-* YunoHost documentation for this app: <https://yunohost.org/app_netdata>
 * Report a bug: <https://github.com/YunoHost-Apps/netdata_ynh/issues>
 
 ## Developer info
