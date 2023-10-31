@@ -213,6 +213,7 @@ write a collector for your custom application using our [plugin API](/collectors
 * Official app website: <http://my-netdata.io>
 * Official admin documentation: <https://learn.netdata.cloud/docs>
 * Upstream app code repository: <https://github.com/netdata/netdata>
+* YunoHost Store: <https://apps.yunohost.org/app/netdata>
 * Report a bug: <https://github.com/YunoHost-Apps/netdata_ynh/issues>
 
 ## Developer info
