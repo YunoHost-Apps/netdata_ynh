@@ -21,17 +21,19 @@ ynh_setup_source --dest_dir="$NETDATA_TMPDIR"
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Configuring NGINX web server..." --weight=2
+ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
+
+yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
 
 #=================================================
 # SPECIFIC SETUP
 #=================================================
 # EXECUTE NETDATA INSTALLER
 #=================================================
-ynh_script_progression --message="Executing Netdata installer..." --weight=30
+ynh_script_progression --message="Executing Netdata installer..." --weight=10
 
 # create a temporary file for the log
 tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
@@ -48,15 +50,6 @@ exec 3<&-
 
 # Specific configuration
 configure_netdata
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# INTEGRATE SERVICE IN YUNOHOST
-#=================================================
-ynh_script_progression --message="Integrating service in YunoHost..."
-
-yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
