@@ -75,7 +75,7 @@ EOF
   chgrp netdata $web_log_file
   # Manage upgrade case from python to go plugin
   if [ -f "$install_dir/etc/netdata/python.d/web_log.conf" ] ; then
-#REMOVEME?     ynh_secure_remove --file="$install_dir/etc/netdata/python.d/web_log.conf"
+  ynh_secure_remove --file="$install_dir/etc/netdata/python.d/web_log.conf"
   fi
 }
 
@@ -95,6 +95,6 @@ EOF
   chgrp netdata $postgres_file
     # Manage upgrade case from python to go plugin
   if [ -f "$install_dir/etc/netdata/python.d/postgres.conf" ] ; then
-#REMOVEME?     ynh_secure_remove --file="$install_dir/etc/netdata/python.d/postgres.conf"
+  ynh_secure_remove --file="$install_dir/etc/netdata/python.d/postgres.conf"
   fi
 }
