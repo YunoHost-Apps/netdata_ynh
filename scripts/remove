@@ -34,9 +34,10 @@ ynh_script_progression --message="Uninstalling Netdata..." --weight=6
 UNINSTALL_SCRIPT="netdata-uninstaller.sh"
 tmpdir=$(mktemp -d)
 
-ynh_setup_source --dest_dir="$tmpdir" --source_id="uninstaller"
+#ynh_setup_source --dest_dir="$tmpdir" --source_id="uninstaller"
+cp ../conf/netdata-uninstaller.sh $tmpdir
 chmod +x $tmpdir/$UNINSTALL_SCRIPT
-
+ 
 # Move outside the directory (which will be removed)
 pushd $tmpdir
 	# create a temporary file for the log

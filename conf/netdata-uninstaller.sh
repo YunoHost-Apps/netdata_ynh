@@ -173,23 +173,23 @@ portable_del_group() {
 	return 1
 }
 
-portable_del_user() {
-	local username="${1}"
-	echo >&2 "Deleting ${username} user account ..."
+# portable_del_user() {
+# 	local username="${1}"
+# 	echo >&2 "Deleting ${username} user account ..."
 
-	# Linux
-	if command -v userdel 1>/dev/null 2>&1; then
-		run userdel -f "${username}" && return 0
-	fi
+# 	# Linux
+# 	if command -v userdel 1>/dev/null 2>&1; then
+# 		run userdel -f "${username}" && return 0
+# 	fi
 
-	# mac OS
-	if command -v sysadminctl 1>/dev/null 2>&1; then
-		run sysadminctl -deleteUser "${username}" && return 0
-	fi
+# 	# mac OS
+# 	if command -v sysadminctl 1>/dev/null 2>&1; then
+# 		run sysadminctl -deleteUser "${username}" && return 0
+# 	fi
 
-	echo >&2 "User ${username} could not be deleted from system, you might have to remove it manually"
-	return 1
-}
+# 	echo >&2 "User ${username} could not be deleted from system, you might have to remove it manually"
+# 	return 1
+# }
 
 portable_del_user_from_group() {
 	local groupname="${1}" username="${2}"
@@ -324,10 +324,10 @@ if [ -n "$NETDATA_ADDED_TO_GROUPS" ]; then
 	done
 fi
 
-#### REMOVE USER
-user_input "Press ENTER to delete 'netdata' system user > "
-portable_del_user "netdata" || :
+# #### REMOVE USER
+# user_input "Press ENTER to delete 'netdata' system user > "
+# portable_del_user "netdata" || :
 
-### REMOVE GROUP
-user_input "Press ENTER to delete 'netdata' system group > "
-portable_del_group "netdata" || :
+# ### REMOVE GROUP
+# user_input "Press ENTER to delete 'netdata' system group > "
+# portable_del_group "netdata" || :
