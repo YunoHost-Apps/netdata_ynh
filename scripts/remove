@@ -12,12 +12,12 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
+#REMOVEME? ynh_script_progression --message="Loading installation settings..." --weight=1
 
-app=$YNH_APP_INSTANCE_NAME
+#REMOVEME? app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
+#REMOVEME? #REMOVEME? install_dir=$(ynh_app_setting_get --app=$app --key=install_dir)
 
 #=================================================
 # STANDARD REMOVE
@@ -43,10 +43,10 @@ ynh_remove_nginx_config
 #=================================================
 # REMOVE DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Removing dependencies..." --weight=8
+#REMOVEME? ynh_script_progression --message="Removing dependencies..." --weight=8
 
 # Remove metapackage and its dependencies
-ynh_remove_app_dependencies
+#REMOVEME? ynh_remove_app_dependencies
 
 #=================================================
 # UNINSTALLING NETDATA
@@ -68,7 +68,7 @@ pushd $tmpdir
 	exec 3>${tmp}
 
 	# Execute the uninstall script
-	./${UNINSTALL_SCRIPT} --yes --force --env $final_path/etc/netdata/.environment >&3 2>&3
+	./${UNINSTALL_SCRIPT} --yes --force --env $install_dir/etc/netdata/.environment >&3 2>&3
 
 	# close fd 3
 	exec 3<&-

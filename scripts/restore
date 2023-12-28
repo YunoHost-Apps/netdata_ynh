@@ -14,27 +14,27 @@ source /usr/share/yunohost/helpers
 # MANAGE SCRIPT FAILURE
 #=================================================
 
-ynh_clean_setup () {
+#REMOVEME? ynh_clean_setup () {
 	true
 }
 # Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
+#REMOVEME? ynh_abort_if_errors
 
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
+#REMOVEME? ynh_script_progression --message="Loading installation settings..." --weight=1
 
-app=$YNH_APP_INSTANCE_NAME
+#REMOVEME? app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
+#REMOVEME? path=$(ynh_app_setting_get --app=$app --key=path)
+#REMOVEME? #REMOVEME? install_dir=$(ynh_app_setting_get --app=$app --key=install_dir)
 
 #=================================================
 # CHECK IF THE APP CAN BE RESTORED
 #=================================================
-ynh_script_progression --message="Validating restoration parameters..." --weight=1
+#REMOVEME? ynh_script_progression --message="Validating restoration parameters..." --weight=1
 
 #=================================================
 # STANDARD RESTORATION STEPS
@@ -43,17 +43,17 @@ ynh_script_progression --message="Validating restoration parameters..." --weight
 #=================================================
 ynh_script_progression --message="Restoring Netdata configuration directory..." --weight=1
 
-ynh_restore_file --origin_path="$final_path/etc/netdata"
+ynh_restore_file --origin_path="$install_dir/etc/netdata"
 
 #=================================================
 # SPECIFIC RESTORATION
 #=================================================
 # REINSTALL DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Reinstalling dependencies..." --weight=7
+#REMOVEME? ynh_script_progression --message="Reinstalling dependencies..." --weight=7
 
 # Define and install dependencies
-ynh_install_app_dependencies $pkg_dependencies
+#REMOVEME? ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # RESTORE THE NGINX CONFIGURATION
@@ -91,14 +91,14 @@ configure_netdata
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
+yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=$app --action="start" --log_path="$final_path/var/log/$app/error.log"
+ynh_systemd_action --service_name=$app --action="start" --log_path="$install_dir/var/log/$app/error.log"
 
 #=================================================
 # GENERIC FINALIZATION

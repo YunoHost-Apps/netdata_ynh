@@ -12,14 +12,14 @@ source /usr/share/yunohost/helpers
 #=================================================
 # LOAD SETTINGS
 #=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
+#REMOVEME? ynh_script_progression --message="Loading installation settings..." --weight=1
 
-app=$YNH_APP_INSTANCE_NAME
+#REMOVEME? app=$YNH_APP_INSTANCE_NAME
 
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-admin=$(ynh_app_setting_get --app=$app --key=admin)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
+#REMOVEME? domain=$(ynh_app_setting_get --app=$app --key=domain)
+#REMOVEME? path=$(ynh_app_setting_get --app=$app --key=path)
+#REMOVEME? admin=$(ynh_app_setting_get --app=$app --key=admin)
+#REMOVEME? #REMOVEME? install_dir=$(ynh_app_setting_get --app=$app --key=install_dir)
 
 #=================================================
 # CHECK VERSION
@@ -30,16 +30,16 @@ upgrade_type=$(ynh_check_app_version_changed)
 #=================================================
 # BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
 #=================================================
-ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=3
+#REMOVEME? ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=3
 
 # Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
+#REMOVEME? ynh_backup_before_upgrade
+#REMOVEME? ynh_clean_setup () {
 	# Restore it if the upgrade fails
-	ynh_restore_upgradebackup
+#REMOVEME? 	ynh_restore_upgradebackup
 }
 # Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
+#REMOVEME? ynh_abort_if_errors
 
 #=================================================
 # STANDARD UPGRADE STEPS
@@ -48,22 +48,22 @@ ynh_abort_if_errors
 #=================================================
 ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
 
-# If final_path doesn't exist, create it
-if [ -z "$final_path" ]; then
-	final_path=/opt/$app
-	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+# If install_dir doesn't exist, create it
+if [ -z "$install_dir" ]; then
+#REMOVEME? 	install_dir=/opt/$app
+#REMOVEME? 	ynh_app_setting_set --app=$app --key=install_dir --value=$install_dir
 fi
 
-# If final_path wrongly refers to /var/www
+# If install_dir wrongly refers to /var/www
 # see http://tldp.org/LDP/abs/html/comparison-ops.html for syntax reference
-if [[ $final_path == /var/www* ]]; then
-	final_path=/opt/$app
-	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
+if [[ $install_dir == /var/www* ]]; then
+#REMOVEME? 	install_dir=/opt/$app
+#REMOVEME? 	ynh_app_setting_set --app=$app --key=install_dir --value=$install_dir
 fi
 
 # Cleaning legacy permissions
-if ynh_legacy_permissions_exists; then
-    ynh_legacy_permissions_delete_all
+#REMOVEME? if ynh_legacy_permissions_exists; then
+#REMOVEME?     ynh_legacy_permissions_delete_all
 
     ynh_app_setting_delete --app=$app --key=is_public
 fi
@@ -121,9 +121,9 @@ ynh_add_nginx_config
 #=================================================
 # UPGRADE DEPENDENCIES
 #=================================================
-ynh_script_progression --message="Upgrading dependencies..." --weight=7
+#REMOVEME? ynh_script_progression --message="Upgrading dependencies..." --weight=7
 
-ynh_install_app_dependencies $pkg_dependencies
+#REMOVEME? ynh_install_app_dependencies $pkg_dependencies
 
 #=================================================
 # GENERIC FINALIZATION
@@ -132,21 +132,21 @@ ynh_install_app_dependencies $pkg_dependencies
 #=================================================
 ynh_script_progression --message="Integrating service in YunoHost..."
 
-yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
+yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=$app --action="restart" --log_path="$final_path/var/log/$app/error.log"
+ynh_systemd_action --service_name=$app --action="restart" --log_path="$install_dir/var/log/$app/error.log"
 
 #=================================================
 # RELOAD NGINX
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
+#REMOVEME? ynh_script_progression --message="Reloading NGINX web server..." --weight=1
 
-ynh_systemd_action --service_name=nginx --action=reload
+#REMOVEME? ynh_systemd_action --service_name=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT

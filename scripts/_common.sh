@@ -5,7 +5,7 @@
 #=================================================
 
 # dependencies used by the app
-pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python3-mysqldb libipmimonitoring-dev acl python3-pymongo libuv1-dev liblz4-dev libjudy-dev libssl-dev cmake"
+#REMOVEME? pkg_dependencies="zlib1g-dev uuid-dev libmnl-dev gcc make git autoconf autoconf-archive autogen automake pkg-config curl jq nodejs python3-mysqldb libipmimonitoring-dev acl python3-pymongo libuv1-dev liblz4-dev libjudy-dev libssl-dev cmake"
 
 #=================================================
 # PERSONAL HELPERS
@@ -17,12 +17,12 @@ configure_netdata() {
   # Set server as registry serveur
   sed -i "/^\[registry\]$/,/^\[/ {
     s/# enabled = no/enabled = yes/
-    s@# registry to announce = https://registry.my-netdata.io@registry to announce = https://$domain$path_url@
-  }" $final_path/etc/netdata/netdata.conf
+    s@# registry to announce = https://registry.my-netdata.io@registry to announce = https://$domain$path@
+  }" $install_dir/etc/netdata/netdata.conf
 
   #  Opt-out from sending anonymous statistics
   # (see https://docs.netdata.cloud/docs/anonymous-statistics/#opt-out)
-  touch $final_path/etc/netdata/.opt-out-from-anonymous-statistics
+  touch $install_dir/etc/netdata/.opt-out-from-anonymous-statistics
 
   # Add a web_log entry for every YunoHost domain
   netdata_add_yunohost_web_logs
@@ -57,9 +57,9 @@ configure_netdata() {
 
 # Add a web_log entry for every YunoHost domain
 netdata_add_yunohost_web_logs () {
-  local web_log_file="$final_path/etc/netdata/go.d/web_log.conf"
+  local web_log_file="$install_dir/etc/netdata/go.d/web_log.conf"
   if [ ! -f $web_log_file ] ; then
-    cp $final_path/etc/netdata/orig/go.d/web_log.conf $web_log_file
+    cp $install_dir/etc/netdata/orig/go.d/web_log.conf $web_log_file
   fi
   if [ -z "$(grep "YUNOHOST" $web_log_file)" ] ; then
     echo "# ------------YUNOHOST DOMAINS---------------" >> $web_log_file
@@ -77,16 +77,16 @@ EOF
   fi
   chgrp netdata $web_log_file
   # Manage upgrade case from python to go plugin
-  if [ -f "$final_path/etc/netdata/python.d/web_log.conf" ] ; then
-    ynh_secure_remove --file="$final_path/etc/netdata/python.d/web_log.conf"
+  if [ -f "$install_dir/etc/netdata/python.d/web_log.conf" ] ; then
+#REMOVEME?     ynh_secure_remove --file="$install_dir/etc/netdata/python.d/web_log.conf"
   fi
 }
 
 # If PostgreSQL is installed, add a PostgreSQL entry using instance password
 netdata_add_yunohost_postgres_configuration () {
-  local postgres_file="$final_path/etc/netdata/go.d/postgres.conf"
+  local postgres_file="$install_dir/etc/netdata/go.d/postgres.conf"
   if [ ! -f $postgres_file ] ; then
-    cp $final_path/etc/netdata/orig/go.d/postgres.conf $postgres_file
+    cp $install_dir/etc/netdata/orig/go.d/postgres.conf $postgres_file
   fi
   if [ -f /etc/yunohost/psql ] && [ -z "$(grep "YUNOHOST" $postgres_file)" ] ; then
      cat >> $postgres_file <<EOF
@@ -97,7 +97,7 @@ EOF
   fi
   chgrp netdata $postgres_file
     # Manage upgrade case from python to go plugin
-  if [ -f "$final_path/etc/netdata/python.d/postgres.conf" ] ; then
-    ynh_secure_remove --file="$final_path/etc/netdata/python.d/postgres.conf"
+  if [ -f "$install_dir/etc/netdata/python.d/postgres.conf" ] ; then
+#REMOVEME?     ynh_secure_remove --file="$install_dir/etc/netdata/python.d/postgres.conf"
   fi
 }
