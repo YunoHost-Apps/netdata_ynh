@@ -61,7 +61,7 @@ ram.runtime = "50M"
     [resources.system_user]
 
     [resources.install_dir]
-    dir = 
+    dir = "/opt/__APP__"
     [resources.permissions]
     main.url = "/"
 
