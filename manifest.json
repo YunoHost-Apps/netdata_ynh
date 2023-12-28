@@ -6,7 +6,7 @@
         "en": "Real-time performance and health monitoring",
         "fr": "Monitoring serveur en temps reel"
     },
-    "version": "1.44.1~ynh1",
+    "version": "1.44.1~ynh2",
     "url": "http://my-netdata.io/",
     "upstream": {
         "license": "GPL-3.0",
@@ -23,7 +23,7 @@
         "url": ""
     },
     "requirements": {
-        "yunohost": ">= 4.3.0"
+        "yunohost": ">= 11.2"
     },
     "multi_instance": false,
     "services": [
