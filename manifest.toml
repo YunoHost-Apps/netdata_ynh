@@ -58,6 +58,8 @@ ram.runtime = "50M"
         format = "whatever"
         rename = "netdata-uninstaller.sh"
 
+    [resources.system_user]
+
     [resources.install_dir]
     dir = "/opt/__APP__"
 
