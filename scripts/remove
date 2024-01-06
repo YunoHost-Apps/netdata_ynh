@@ -39,16 +39,11 @@ chmod +x $tmpdir/$UNINSTALL_SCRIPT
 
 # Move outside the directory (which will be removed)
 pushd $tmpdir
-	# create a temporary file for the log
-	tmp=$(mktemp /tmp/netdata-uninstaller-log-XXXXXX.log)
-	# open fd 3 and send it to tmp
-	exec 3>${tmp}
+    # create a temporary file for the log
+    tmplog=$(mktemp /tmp/netdata-uninstaller-log-XXXXXX.log)
 
-	# Execute the uninstall script
-	./${UNINSTALL_SCRIPT} --yes --force --env $install_dir/etc/netdata/.environment >&3 2>&3
-
-	# close fd 3
-	exec 3<&-
+    # Execute the uninstall script
+    ./${UNINSTALL_SCRIPT} --yes --force --env $install_dir/etc/netdata/.environment >$tmplog 2>$tmplog
 popd
 
 # Remove MySQL netdata user
