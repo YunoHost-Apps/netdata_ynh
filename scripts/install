@@ -19,6 +19,22 @@ NETDATA_TMPDIR=$(mktemp -d)
 ynh_setup_source --dest_dir="$NETDATA_TMPDIR"
 
 #=================================================
+# BUILD
+#=================================================
+ynh_script_progression --message="Executing Netdata installer..." --weight=10
+
+# create a temporary file for the log
+tmplog=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
+
+pushd $NETDATA_TMPDIR
+    # the installer.sh script will append "netdata" after the --install-prefix arg
+    ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel >$tmplog 2>$tmplog || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+popd
+
+# Specific configuration
+configure_netdata
+
+#=================================================
 # NGINX CONFIGURATION
 #=================================================
 ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
@@ -27,24 +43,6 @@ ynh_script_progression --message="Adding system configurations related to $app..
 ynh_add_nginx_config
 
 yunohost service add $app --description "Real-time performance and health monitoring" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
-
-#=================================================
-# SPECIFIC SETUP
-#=================================================
-# EXECUTE NETDATA INSTALLER
-#=================================================
-ynh_script_progression --message="Executing Netdata installer..." --weight=10
-
-# create a temporary file for the log
-tmplog=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
-
-# Launch netdata installation in /opt directory
-pushd $NETDATA_TMPDIR
-    ./netdata-installer.sh --install-prefix /opt --dont-wait --disable-cloud --disable-telemetry --stable-channel >$tmplog 2>$tmplog || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
-popd
-
-# Specific configuration
-configure_netdata
 
 #=================================================
 # START SYSTEMD SERVICE

@@ -43,9 +43,9 @@ then
 	# create a temporary file for the log
 	tmplog=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
 
-	# Launch netdata installation in /opt directory
 	pushd $NETDATA_TMPDIR
-		./netdata-installer.sh --install-prefix /opt --dont-wait --disable-cloud  >$tmplog 2>$tmplog || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+        # the installer.sh script will append "netdata" after the --install-prefix arg
+		./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud  >$tmplog 2>$tmplog || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 	popd
 fi
 
