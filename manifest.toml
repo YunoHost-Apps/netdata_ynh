@@ -52,12 +52,6 @@ ram.runtime = "50M"
         sha256 = "77e94acf7085c23ab20b2d0d2d4d2bc5a289f121fc7aac5d0daffb960041fd95"
         autoupdate.strategy = "latest_github_tag"
 
-        [resources.sources.uninstaller]
-        url = "https://raw.githubusercontent.com/netdata/netdata/v1.15.0/packaging/installer/netdata-uninstaller.sh"
-        sha256 = "a4727069b47138cea5c466bc902934545841c88dc5f641728ef0feb921efd218"
-        format = "whatever"
-        rename = "netdata-uninstaller.sh"
-
     [resources.system_user]
 
     [resources.install_dir]
