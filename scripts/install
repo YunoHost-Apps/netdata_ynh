@@ -36,17 +36,12 @@ yunohost service add $app --description "Real-time performance and health monito
 ynh_script_progression --message="Executing Netdata installer..." --weight=10
 
 # create a temporary file for the log
-tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
-# open fd 3 and send it to tmp
-exec 3>${tmp}
+tmplog=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
 
 # Launch netdata installation in /opt directory
 pushd $NETDATA_TMPDIR
-	./netdata-installer.sh --install-prefix /opt --dont-wait --disable-cloud --disable-telemetry --stable-channel >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+    ./netdata-installer.sh --install-prefix /opt --dont-wait --disable-cloud --disable-telemetry --stable-channel >$tmplog 2>$tmplog || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 popd
-
-# close fd 3
-exec 3<&-
 
 # Specific configuration
 configure_netdata
