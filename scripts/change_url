@@ -30,8 +30,7 @@ ynh_change_url_nginx_config
 #=================================================
 
 # Change registry link
-#ynh_replace_string --match_string="registry to announce = https://$old_domain$old_path" --replace_string="registry to announce = https://$new_domain$new_path" --target_file="/opt/netdata/etc/netdata/netdata.conf"
-ynh_replace_string --match_string="registry to announce = https://$old_domain$old_path" --replace_string="registry to announce = https://$new_domain$new_path" --target_file="/etc/netdata/netdata.conf"
+ynh_replace_string --match_string="registry to announce = https://$old_domain$old_path" --replace_string="registry to announce = https://$new_domain$new_path" --target_file="$install_dir/etc/netdata/netdata.conf"
 
 #=================================================
 # GENERIC FINALISATION
