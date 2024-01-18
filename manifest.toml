@@ -1,0 +1,63 @@
+packaging_format = 2
+
+id = "netdata"
+name = "NetData"
+description.en = "Real-time performance and health monitoring"
+description.fr = "Monitoring serveur en temps reel"
+
+version = "1.44.1~ynh1"
+
+maintainers = ["JimboJoe"]
+
+[upstream]
+license = "GPL-3.0"
+website = "http://my-netdata.io"
+demo = "https://learn.netdata.cloud/docs/agent/demo-sites/"
+admindoc = "https://learn.netdata.cloud/docs"
+code = "https://github.com/netdata/netdata"
+
+[integration]
+yunohost = ">= 11.2"
+architectures = "all"
+multi_instance = false
+
+ldap = false
+
+sso = false
+
+disk = "50M"
+ram.build = "1500M"
+ram.runtime = "50M"
+
+[install]
+    [install.domain]
+    type = "domain"
+
+    [install.path]
+    type = "path"
+    default = "/netdata"
+
+    [install.init_main_permission]
+    type = "group"
+    default = false
+
+    [install.admin]
+    type = "user"
+
+[resources]
+
+    [resources.sources]
+        [resources.sources.main]
+        url = "https://github.com/netdata/netdata/releases/download/v1.44.1/netdata-v1.44.1.tar.gz"
+        sha256 = "77e94acf7085c23ab20b2d0d2d4d2bc5a289f121fc7aac5d0daffb960041fd95"
+        autoupdate.strategy = "latest_github_tag"
+
+    [resources.system_user]
+
+    [resources.install_dir]
+
+    [resources.permissions]
+    main.url = "/"
+
+    [resources.apt]
+    packages = "zlib1g-dev, uuid-dev, libmnl-dev, gcc, make, git, autoconf, autoconf-archive, autogen, automake, pkg-config, curl, jq, nodejs, python3-mysqldb, libipmimonitoring-dev, acl, python3-pymongo, libuv1-dev, liblz4-dev, libjudy-dev, libssl-dev, cmake"

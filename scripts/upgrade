@@ -10,63 +10,10 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
-
-app=$YNH_APP_INSTANCE_NAME
-
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-admin=$(ynh_app_setting_get --app=$app --key=admin)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-
-#=================================================
 # CHECK VERSION
 #=================================================
 
 upgrade_type=$(ynh_check_app_version_changed)
-
-#=================================================
-# BACKUP BEFORE UPGRADE THEN ACTIVE TRAP
-#=================================================
-ynh_script_progression --message="Backing up the app before upgrading (may take a while)..." --weight=3
-
-# Backup the current version of the app
-ynh_backup_before_upgrade
-ynh_clean_setup () {
-	# Restore it if the upgrade fails
-	ynh_restore_upgradebackup
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
-# STANDARD UPGRADE STEPS
-#=================================================
-# ENSURE DOWNWARD COMPATIBILITY
-#=================================================
-ynh_script_progression --message="Ensuring downward compatibility..." --weight=1
-
-# If final_path doesn't exist, create it
-if [ -z "$final_path" ]; then
-	final_path=/opt/$app
-	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
-fi
-
-# If final_path wrongly refers to /var/www
-# see http://tldp.org/LDP/abs/html/comparison-ops.html for syntax reference
-if [[ $final_path == /var/www* ]]; then
-	final_path=/opt/$app
-	ynh_app_setting_set --app=$app --key=final_path --value=$final_path
-fi
-
-# Cleaning legacy permissions
-if ynh_legacy_permissions_exists; then
-    ynh_legacy_permissions_delete_all
-
-    ynh_app_setting_delete --app=$app --key=is_public
-fi
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -94,17 +41,12 @@ then
 	[ ! -z "${pids}" ] && kill -USR1 ${pids}
 
 	# create a temporary file for the log
-	tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
-	# open fd 3 and send it to tmp
-	exec 3>${tmp}
+	tmplog=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
 
-	# Launch netdata installation in /opt directory
 	pushd $NETDATA_TMPDIR
-		./netdata-installer.sh --install-prefix /opt --dont-wait --disable-cloud  >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+        # the installer.sh script will append "netdata" after the --install-prefix arg
+		./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud  >$tmplog 2>$tmplog || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 	popd
-    
-	# close fd 3
-	exec 3<&-
 fi
 
 # Specific configuration
@@ -113,40 +55,19 @@ configure_netdata
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Upgrading NGINX web server configuration..." --weight=1
+ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
 
 # Create a dedicated NGINX config
 ynh_add_nginx_config
 
-#=================================================
-# UPGRADE DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Upgrading dependencies..." --weight=7
-
-ynh_install_app_dependencies $pkg_dependencies
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# INTEGRATE SERVICE IN YUNOHOST
-#=================================================
-ynh_script_progression --message="Integrating service in YunoHost..."
-
-yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
+yunohost service add $app --description "Real-time performance and health monitoring" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=$app --action="restart" --log_path="$final_path/var/log/$app/error.log"
-
-#=================================================
-# RELOAD NGINX
-#=================================================
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
-
-ynh_systemd_action --service_name=nginx --action=reload
+ynh_systemd_action --service_name=$app --action="restart" --log_path="$install_dir/var/log/$app/error.log"
 
 #=================================================
 # END OF SCRIPT
