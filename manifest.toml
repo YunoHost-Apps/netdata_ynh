@@ -1,3 +1,5 @@
+#:schema https://raw.githubusercontent.com/YunoHost/apps/master/schemas/manifest.v2.schema.json
+
 packaging_format = 2
 
 id = "netdata"
@@ -47,10 +49,10 @@ ram.runtime = "50M"
 [resources]
 
     [resources.sources]
-        [resources.sources.main]
-        url = "https://github.com/netdata/netdata/releases/download/v1.44.1/netdata-v1.44.1.tar.gz"
-        sha256 = "77e94acf7085c23ab20b2d0d2d4d2bc5a289f121fc7aac5d0daffb960041fd95"
-        autoupdate.strategy = "latest_github_tag"
+    [resources.sources.main]
+    url = "https://github.com/netdata/netdata/releases/download/v1.44.1/netdata-v1.44.1.tar.gz"
+    sha256 = "77e94acf7085c23ab20b2d0d2d4d2bc5a289f121fc7aac5d0daffb960041fd95"
+    autoupdate.strategy = "latest_github_tag"
 
     [resources.system_user]
 

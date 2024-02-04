@@ -26,9 +26,9 @@ ynh_script_progression --message="Executing Netdata installer..." --weight=10
 # create a temporary file for the log
 tmplog=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
 
-pushd $NETDATA_TMPDIR
+pushd "$NETDATA_TMPDIR"
     # the installer.sh script will append "netdata" after the --install-prefix arg
-    ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel >$tmplog 2>$tmplog || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+    ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel >"$tmplog" 2>"$tmplog" || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
 popd
 
 # Specific configuration
@@ -42,7 +42,7 @@ ynh_script_progression --message="Adding system configurations related to $app..
 # Create a dedicated NGINX config
 ynh_add_nginx_config
 
-yunohost service add $app --description "Real-time performance and health monitoring" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
+yunohost service add "$app" --description "Real-time performance and health monitoring" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
@@ -50,7 +50,7 @@ yunohost service add $app --description "Real-time performance and health monito
 ynh_script_progression --message="Starting a systemd service..." --weight=2
 
 # Start a systemd service
-ynh_systemd_action --service_name=$app --action="restart" --log_path="$install_dir/var/log/$app/error.log"
+ynh_systemd_action --service_name="$app" --action="restart" --log_path="$install_dir/var/log/$app/error.log"
 
 #=================================================
 # END OF SCRIPT

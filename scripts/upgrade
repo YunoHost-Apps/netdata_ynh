@@ -10,44 +10,36 @@ source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# CHECK VERSION
+# DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-
-upgrade_type=$(ynh_check_app_version_changed)
+ynh_script_progression --message="Upgrading source files..." --weight=18
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
 
-if [ "$upgrade_type" == "UPGRADE_APP" ]
-then
-	ynh_script_progression --message="Upgrading source files..." --weight=18
+# Download, check integrity, uncompress and patch the source from app.src
+NETDATA_TMPDIR=$(mktemp -d)
+ynh_setup_source "$NETDATA_TMPDIR"
 
-	#=================================================
-	# DOWNLOAD, CHECK AND UNPACK SOURCE
-	#=================================================
+#=================================================
+# SPECIFIC UPGRADE
+#=================================================
 
-	# Download, check integrity, uncompress and patch the source from app.src
-	NETDATA_TMPDIR=$(mktemp -d)
-	ynh_setup_source "$NETDATA_TMPDIR"
-
-	#=================================================
-	# SPECIFIC UPGRADE
-	#=================================================
-
-	# signal netdata to start saving its database
-	# this is handy if your database is big
-	pids=$(pidof netdata)
-	[ ! -z "${pids}" ] && kill -USR1 ${pids}
-
-	# create a temporary file for the log
-	tmplog=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
-
-	pushd $NETDATA_TMPDIR
-        # the installer.sh script will append "netdata" after the --install-prefix arg
-		./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud  >$tmplog 2>$tmplog || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
-	popd
+# signal netdata to start saving its database
+# this is handy if your database is big
+pids=$(pidof netdata)
+if [ -n "${pids}" ]; then
+	kill -USR1 ${pids}
 fi
+
+# create a temporary file for the log
+tmplog=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
+
+pushd "$NETDATA_TMPDIR"
+	# the installer.sh script will append "netdata" after the --install-prefix arg
+	./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud  >"$tmplog" 2>"$tmplog" || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+popd
 
 # Specific configuration
 configure_netdata
@@ -60,14 +52,14 @@ ynh_script_progression --message="Upgrading system configurations related to $ap
 # Create a dedicated NGINX config
 ynh_add_nginx_config
 
-yunohost service add $app --description "Real-time performance and health monitoring" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
+yunohost service add "$app" --description "Real-time performance and health monitoring" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
 ynh_script_progression --message="Starting a systemd service..." --weight=1
 
-ynh_systemd_action --service_name=$app --action="restart" --log_path="$install_dir/var/log/$app/error.log"
+ynh_systemd_action --service_name="$app" --action="restart" --log_path="$install_dir/var/log/$app/error.log"
 
 #=================================================
 # END OF SCRIPT
