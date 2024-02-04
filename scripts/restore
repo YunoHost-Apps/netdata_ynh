@@ -11,56 +11,13 @@ source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
-# MANAGE SCRIPT FAILURE
-#=================================================
-
-ynh_clean_setup () {
-	true
-}
-# Exit if an error occurs during the execution of the script
-ynh_abort_if_errors
-
-#=================================================
-# LOAD SETTINGS
-#=================================================
-ynh_script_progression --message="Loading installation settings..." --weight=1
-
-app=$YNH_APP_INSTANCE_NAME
-
-domain=$(ynh_app_setting_get --app=$app --key=domain)
-path_url=$(ynh_app_setting_get --app=$app --key=path)
-final_path=$(ynh_app_setting_get --app=$app --key=final_path)
-
-#=================================================
-# CHECK IF THE APP CAN BE RESTORED
-#=================================================
-ynh_script_progression --message="Validating restoration parameters..." --weight=1
-
-#=================================================
 # STANDARD RESTORATION STEPS
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
 ynh_script_progression --message="Restoring Netdata configuration directory..." --weight=1
 
-ynh_restore_file --origin_path="$final_path/etc/netdata"
-
-#=================================================
-# SPECIFIC RESTORATION
-#=================================================
-# REINSTALL DEPENDENCIES
-#=================================================
-ynh_script_progression --message="Reinstalling dependencies..." --weight=7
-
-# Define and install dependencies
-ynh_install_app_dependencies $pkg_dependencies
-
-#=================================================
-# RESTORE THE NGINX CONFIGURATION
-#=================================================
-ynh_script_progression --message="Restoring the NGINX web server configuration..."
-
-ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
+ynh_restore_file --origin_path="$install_dir/etc/netdata"
 
 #=================================================
 # INSTALL AND RESTORE THE APP CONFIGURATION
@@ -72,40 +29,31 @@ NETDATA_TMPDIR=$(mktemp -d)
 ynh_setup_source --dest_dir="$NETDATA_TMPDIR"
 
 # create a temporary file for the log
-tmp=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
-# open fd 3 and send it to tmp
-exec 3>${tmp}
+tmplog=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
 
-# Launch netdata installation in /opt directory
-cd $NETDATA_TMPDIR
-./netdata-installer.sh --install-prefix /opt --dont-wait --disable-cloud --disable-telemetry --stable-channel >&3 2>&3 || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
-
-# close fd 3
-exec 3<&-
+pushd "$NETDATA_TMPDIR"
+    # the installer.sh script will append "netdata" after the --install-prefix arg
+    ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel >"$tmplog" 2>"$tmplog" || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+popd
 
 # Specific configuration
 configure_netdata
 
 #=================================================
-# INTEGRATE SERVICE IN YUNOHOST
+# RESTORE SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Integrating service in YunoHost..."
+ynh_script_progression --message="Restoring system configurations related to $app..." --weight=1
 
-yunohost service add $app --description "Real-time performance and health monitoring for systems and applications" --log "$final_path/var/log/netdata/error.log" "$final_path/var/log/netdata/access.log" "$final_path/var/log/netdata/debug.log"
+ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
+
+yunohost service add "$app" --description "Real-time performance and health monitoring" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression --message="Reloading NGINX web server and $app's service..." --weight=1
 
-ynh_systemd_action --service_name=$app --action="start" --log_path="$final_path/var/log/$app/error.log"
-
-#=================================================
-# GENERIC FINALIZATION
-#=================================================
-# RELOAD NGINX
-#=================================================
-ynh_script_progression --message="Reloading NGINX web server..." --weight=1
+ynh_systemd_action --service_name="$app" --action="start" --log_path="$install_dir/var/log/$app/error.log"
 
 ynh_systemd_action --service_name=nginx --action=reload
 
