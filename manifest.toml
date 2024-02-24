@@ -52,7 +52,7 @@ ram.runtime = "50M"
     [resources.sources.main]
     url = "https://github.com/netdata/netdata/releases/download/v1.44.3/netdata-v1.44.3.tar.gz"
     sha256 = "50df30a9aaf60d550eb8e607230d982827e04194f7df3eba0e83ff7919270ad2"
-    autoupdate.strategy = "latest_github_tag"
+    autoupdate.strategy = "latest_github_release"
     autoupdate.asset = "^netdata-v([0-9.]*)tar.gz$"
 
     [resources.system_user]
