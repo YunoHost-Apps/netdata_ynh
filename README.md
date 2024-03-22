@@ -25,17 +25,16 @@ _netdata is **fast** and **efficient**, designed to permanently run on all syste
 (**physical** & **virtual** servers, **containers**, **IoT** devices), without
 disrupting their core function._
 
+**Shipped version:** 1.45.0~ynh1
 
-**Shipped version:** 1.44.3~ynh1
-
-**Demo:** https://learn.netdata.cloud/docs/agent/demo-sites/
+**Demo:** <https://learn.netdata.cloud/docs/agent/demo-sites/>
 ## Documentation and resources
 
-* Official app website: <http://my-netdata.io>
-* Official admin documentation: <https://learn.netdata.cloud/docs>
-* Upstream app code repository: <https://github.com/netdata/netdata>
-* YunoHost Store: <https://apps.yunohost.org/app/netdata>
-* Report a bug: <https://github.com/YunoHost-Apps/netdata_ynh/issues>
+- Official app website: <http://my-netdata.io>
+- Official admin documentation: <https://learn.netdata.cloud/docs>
+- Upstream app code repository: <https://github.com/netdata/netdata>
+- YunoHost Store: <https://apps.yunohost.org/app/netdata>
+- Report a bug: <https://github.com/YunoHost-Apps/netdata_ynh/issues>
 
 ## Developer info
 
@@ -43,7 +42,7 @@ Please send your pull request to the [testing branch](https://github.com/YunoHos
 
 To try the testing branch, please proceed like that.
 
-``` bash
+```bash
 sudo yunohost app install https://github.com/YunoHost-Apps/netdata_ynh/tree/testing --debug
 or
 sudo yunohost app upgrade netdata -u https://github.com/YunoHost-Apps/netdata_ynh/tree/testing --debug
