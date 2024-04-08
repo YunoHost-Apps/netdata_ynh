@@ -41,7 +41,7 @@ ram.runtime = "50M"
 
     [install.init_main_permission]
     type = "group"
-    default = false
+    default = all_users
 
     [install.admin]
     type = "user"
