@@ -41,6 +41,7 @@ ram.runtime = "50M"
 
     [install.init_main_permission]
     type = "group"
+    default = "all_users"
 
     [install.admin]
     type = "user"
@@ -62,4 +63,4 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "zlib1g-dev, uuid-dev, libmnl-dev, gcc, make, git, autoconf, autoconf-archive, autogen, automake, pkg-config, curl, jq, nodejs, python3-mysqldb, libipmimonitoring-dev, acl, python3-pymongo, libuv1-dev, liblz4-dev, libjudy-dev, libssl-dev, cmake"
+    packages = "zlib1g-dev, uuid-dev, libelf-dev, libprotobuf-dev, protobuf-compiler, libmnl-dev, gcc, g++, make, git, autoconf, autoconf-archive, autogen, automake, pkg-config, curl, jq, nodejs, python3-mysqldb, libipmimonitoring-dev, acl, python3-pymongo, libuv1-dev, liblz4-dev, libjudy-dev, libssl-dev, cmake, findutils, flex"
