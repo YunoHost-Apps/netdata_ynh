@@ -7,7 +7,7 @@ name = "NetData"
 description.en = "Real-time performance and health monitoring"
 description.fr = "Monitoring serveur en temps reel"
 
-version = "1.45.2~ynh1"
+version = "1.45.4~ynh1"
 
 maintainers = ["JimboJoe"]
 
@@ -50,8 +50,8 @@ ram.runtime = "50M"
 
     [resources.sources]
     [resources.sources.main]
-    url = "https://github.com/netdata/netdata/releases/download/v1.45.2/netdata-v1.45.2.tar.gz"
-    sha256 = "35eca5f1a68b7b58a267db15b001bcfa60ff4939246146c2d133db45e9527f4e"
+    url = "https://github.com/netdata/netdata/releases/download/v1.45.4/netdata-v1.45.4.tar.gz"
+    sha256 = "b9d1de96d27fdc0109d1b3c76ed6cf1aa094f31d100aec4e36a7b17b12aac074"
     autoupdate.strategy = "latest_github_release"
     autoupdate.asset = "^netdata-v([0-9.]*)tar.gz$"
 

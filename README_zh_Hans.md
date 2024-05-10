@@ -26,7 +26,7 @@ _netdata is **fast** and **efficient**, designed to permanently run on all syste
 disrupting their core function._
 
 
-**分发版本：** 1.45.2~ynh1
+**分发版本：** 1.45.4~ynh1
 
 **演示：** <https://learn.netdata.cloud/docs/agent/demo-sites/>
 ## 文档与资源
