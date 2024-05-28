@@ -3,7 +3,7 @@
 请勿手动编辑。
 -->
 
-# YunoHost 的 NetData
+# YunoHost 上的 NetData
 
 [![集成程度](https://dash.yunohost.org/integration/netdata.svg)](https://dash.yunohost.org/appci/app/netdata) ![工作状态](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
 
