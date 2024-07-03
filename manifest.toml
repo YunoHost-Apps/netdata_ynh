@@ -53,6 +53,15 @@ ram.runtime = "50M"
     sha256 = "e909a109e1d60bf9416a70f2bb0bbf668d75c75d7ca9ce0b59d88fc634266114"
     autoupdate.strategy = "latest_github_release"
     autoupdate.asset = "^netdata-v([0-9.]*)tar.gz$"
+    [resources.sources.go]
+    amd64.url = "https://go.dev/dl/go1.22.4.linux-amd64.tar.gz"
+    amd64.sha256 = "ba79d4526102575196273416239cca418a651e049c2b099f3159db85e7bade7d"
+    i386.url = "https://go.dev/dl/go1.22.4.linux-386.tar.gz"
+    i386.sha256 = "47a2a8d249a91eb8605c33bceec63aedda0441a43eac47b4721e3975ff916cec"
+    arm64.url = "https://go.dev/dl/go1.22.4.linux-arm64.tar.gz"
+    arm64.sha256 = "a8e177c354d2e4a1b61020aca3562e27ea3e8f8247eca3170e3fa1e0c2f9e771"
+    armhf.url = "https://go.dev/dl/go1.21.5.linux-armv6l.tar.gz"
+    armhf.sha256 = "837f4bf4e22fcdf920ffeaa4abf3d02d1314e03725431065f4d44c46a01b42fe"
 
     [resources.system_user]
 
@@ -62,4 +71,4 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "zlib1g-dev, uuid-dev, libmnl-dev, gcc, g++, bison, flex, make, git, autoconf, autoconf-archive, autogen, automake, pkg-config, curl, jq, nodejs, python3-mysqldb, libipmimonitoring-dev, acl, python3-pymongo, libuv1-dev, liblz4-dev, libjudy-dev, libssl-dev, libelf-dev, cmake, golang-go"
+    packages = "cmake, ninja-build, pkg-config, bison, flex, gcc, g++, git, libelf-dev, libssl-dev, liblz4-dev, zlib1g-dev, uuid-dev, libyaml-dev, libjson-c-dev, libuv1-dev"
