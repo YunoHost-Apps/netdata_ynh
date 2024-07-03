@@ -39,7 +39,7 @@ tmplog=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
 pushd "$NETDATA_TMPDIR"
 	# the installer.sh script will append "netdata" after the --install-prefix arg
 	if ! ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel > "$tmplog" 2>&1; then
-        tail -n50 $tmplog
+        cat $tmplog
         ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
     fi
 popd
