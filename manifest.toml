@@ -71,4 +71,4 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "cmake, ninja-build, pkg-config, bison, flex, gcc, g++, git, libelf-dev, libssl-dev, liblz4-dev, zlib1g-dev, uuid-dev, libyaml-dev, libjson-c-dev, libuv1-dev"
+    packages = "cmake, ninja-build, pkg-config, bison, flex, gcc, g++, git, mariadb-server, libelf-dev, libssl-dev, liblz4-dev, zlib1g-dev, uuid-dev, libyaml-dev, libjson-c-dev, libuv1-dev"
