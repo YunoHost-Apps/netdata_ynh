@@ -25,16 +25,23 @@ ynh_restore_file --origin_path="$install_dir/etc/netdata"
 ynh_script_progression --message="Reinstalling Netdata..." --weight=18
 
 # Download, check integrity, uncompress and patch the source from app.src
-NETDATA_TMPDIR=$(mktemp -d)
+NETDATA_TMPDIR="$install_dir/netdata_install"
+mkdir -p $NETDATA_TMPDIR
 ynh_setup_source --dest_dir="$NETDATA_TMPDIR"
+GO_TMPDIR="$install_dir/go_install"
+mkdir -p $GO_TMPDIR
+ynh_setup_source --source_id="go" --dest_dir="$GO_TMPDIR"
 
-# create a temporary file for the log
-tmplog=$(mktemp /tmp/netdata-updater-log-XXXXXX.log)
-
+export PATH="$GO_TMPDIR/bin:$PATH"
+export GOPATH="$GO_TMPDIR/go/"
+export HOME=${HOME:-"/root/"}
 pushd "$NETDATA_TMPDIR"
     # the installer.sh script will append "netdata" after the --install-prefix arg
-    ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel >"$tmplog" 2>"$tmplog" || ynh_die "FAILED TO COMPILE/INSTALL NETDATA"
+    ynh_exec_warn_less ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
 popd
+
+ynh_secure_remove --file=$NETDATA_TMPDIR
+ynh_secure_remove --file=$GO_TMPDIR
 
 # Specific configuration
 configure_netdata
