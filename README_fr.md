@@ -5,7 +5,7 @@ Il NE doit PAS être modifié à la main.
 
 # NetData pour YunoHost
 
-[![Niveau d’intégration](https://dash.yunohost.org/integration/netdata.svg)](https://dash.yunohost.org/appci/app/netdata) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
+[![Niveau d’intégration](https://dash.yunohost.org/integration/netdata.svg)](https://ci-apps.yunohost.org/ci/apps/netdata/) ![Statut du fonctionnement](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![Statut de maintenance](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
 
 [![Installer NetData avec YunoHost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=netdata)
 
@@ -26,7 +26,7 @@ _netdata is **fast** and **efficient**, designed to permanently run on all syste
 disrupting their core function._
 
 
-**Version incluse :** 1.44.3~ynh1
+**Version incluse :** 1.46.1~ynh1
 
 **Démo :** <https://learn.netdata.cloud/docs/agent/demo-sites/>
 ## Documentations et ressources
