@@ -44,7 +44,6 @@ ynh_secure_remove "/usr/share/netdata"
 ynh_secure_remove "/usr/libexec/netdata"
 ynh_secure_remove "/var/lib/netdata"
 ynh_secure_remove "/var/cache/netdata"
-ynh_secure_remove "/var/log/netdata"
 ynh_secure_remove "/etc/netdata"
 
 #=================================================
