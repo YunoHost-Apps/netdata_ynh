@@ -5,7 +5,7 @@ EZ editatu eskuz.
 
 # NetData YunoHost-erako
 
-[![Integrazio maila](https://dash.yunohost.org/integration/netdata.svg)](https://dash.yunohost.org/appci/app/netdata) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
+[![Integrazio maila](https://dash.yunohost.org/integration/netdata.svg)](https://ci-apps.yunohost.org/ci/apps/netdata/) ![Funtzionamendu egoera](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![Mantentze egoera](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
 
 [![Instalatu NetData YunoHost-ekin](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=netdata)
 

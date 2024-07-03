@@ -5,7 +5,7 @@
 
 # YunoHost 上的 NetData
 
-[![集成程度](https://dash.yunohost.org/integration/netdata.svg)](https://dash.yunohost.org/appci/app/netdata) ![工作状态](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
+[![集成程度](https://dash.yunohost.org/integration/netdata.svg)](https://ci-apps.yunohost.org/ci/apps/netdata/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
 
 [![使用 YunoHost 安装 NetData](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=netdata)
 

@@ -5,7 +5,7 @@ No se debe editar a mano.
 
 # NetData para Yunohost
 
-[![Nivel de integración](https://dash.yunohost.org/integration/netdata.svg)](https://dash.yunohost.org/appci/app/netdata) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
+[![Nivel de integración](https://dash.yunohost.org/integration/netdata.svg)](https://ci-apps.yunohost.org/ci/apps/netdata/) ![Estado funcional](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![Estado En Mantención](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
 
 [![Instalar NetData con Yunhost](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=netdata)
 
