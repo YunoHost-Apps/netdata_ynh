@@ -26,7 +26,7 @@ _netdata is **fast** and **efficient**, designed to permanently run on all syste
 disrupting their core function._
 
 
-**Paketatutako bertsioa:** 1.46.2~ynh1
+**Paketatutako bertsioa:** 1.46.3~ynh1
 
 **Demoa:** <https://learn.netdata.cloud/docs/agent/demo-sites/>
 ## Dokumentazioa eta baliabideak
