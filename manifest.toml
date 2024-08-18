@@ -18,6 +18,10 @@ demo = "https://learn.netdata.cloud/docs/agent/demo-sites/"
 admindoc = "https://learn.netdata.cloud/docs"
 code = "https://github.com/netdata/netdata"
 
+[antifeatures]
+not-totally-free-upstream.en = "Netdata now includes a dependencie to a UI which is under a shady license that forbids reverse engineering or customisation. See: https://github.com/YunoHost/apps/pull/2519"
+not-totally-free-upstream.fr = "Netdata inclut maintenant une dépendance à une interface utilisateur qui est sous une licence bizarre qui interdit la rétro-ingénierie ou la personnalisation. Voir : https://github.com/YunoHost/apps/pull/2519"
+
 [integration]
 yunohost = ">= 11.2"
 architectures = "all"
