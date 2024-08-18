@@ -33,7 +33,7 @@ disrupting their core function._
 
 - Website aplikasi resmi: <http://my-netdata.io>
 - Dokumentasi admin resmi: <https://learn.netdata.cloud/docs>
-- Repositori kode aplikasi hulu: <https://github.com/netdata/netdata>
+- Depot kode aplikasi hulu: <https://github.com/netdata/netdata>
 - Gudang YunoHost: <https://apps.yunohost.org/app/netdata>
 - Laporkan bug: <https://github.com/YunoHost-Apps/netdata_ynh/issues>
 
