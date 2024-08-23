@@ -26,9 +26,13 @@ _netdata is **fast** and **efficient**, designed to permanently run on all syste
 disrupting their core function._
 
 
-**Version incluse :** 1.46.3~ynh1
+**Version incluse :** 1.47.0~ynh1
 
 **Démo :** <https://learn.netdata.cloud/docs/agent/demo-sites/>
+## :red_circle: Anti-fonctionnalités
+
+- **Application sous licence libre restreinte **: Netdata inclut maintenant une dépendance à une interface utilisateur qui est sous une licence bizarre qui interdit la rétro-ingénierie ou la personnalisation. Voir : https://github.com/YunoHost/apps/pull/2519
+
 ## Documentations et ressources
 
 - Site officiel de l’app : <http://my-netdata.io>
