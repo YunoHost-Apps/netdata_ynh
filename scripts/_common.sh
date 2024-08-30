@@ -1,11 +1,7 @@
 #!/bin/bash
 
 #=================================================
-# COMMON VARIABLES
-#=================================================
-
-#=================================================
-# PERSONAL HELPERS
+# COMMON VARIABLES AND CUSTOM HELPERS
 #=================================================
 
 # Configure NetData
@@ -28,9 +24,9 @@ configure_netdata() {
   netdata_add_yunohost_postgres_configuration
 
   # Create netdata user to monitor MySQL (if needed)
-  is_mysql_user_existing=$(ynh_mysql_execute_as_root --sql="select user from mysql.user where user = 'netdata';")
+  is_mysql_user_existing=$(ynh_mysql_db_shell <<< "select user from mysql.user where user = 'netdata';")
   if [ -z "$is_mysql_user_existing" ] ; then
-    ynh_mysql_execute_as_root --sql="create user 'netdata'@'localhost';
+    ynh_mysql_db_shell <<< "create user 'netdata'@'localhost';
     grant usage on *.* to 'netdata'@'localhost' with grant option;
     flush privileges;"
   fi
@@ -75,7 +71,7 @@ EOF
   chgrp netdata $web_log_file
   # Manage upgrade case from python to go plugin
   if [ -f "$install_dir/etc/netdata/python.d/web_log.conf" ] ; then
-  ynh_secure_remove --file="$install_dir/etc/netdata/python.d/web_log.conf"
+  ynh_safe_rm "$install_dir/etc/netdata/python.d/web_log.conf"
   fi
 }
 
@@ -95,6 +91,6 @@ EOF
   chgrp netdata $postgres_file
     # Manage upgrade case from python to go plugin
   if [ -f "$install_dir/etc/netdata/python.d/postgres.conf" ] ; then
-  ynh_secure_remove --file="$install_dir/etc/netdata/python.d/postgres.conf"
+  ynh_safe_rm "$install_dir/etc/netdata/python.d/postgres.conf"
   fi
 }

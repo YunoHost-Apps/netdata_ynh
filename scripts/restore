@@ -1,11 +1,5 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 # Keep this path for calling _common.sh inside the execution's context of backup and restore scripts
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
@@ -15,14 +9,14 @@ source /usr/share/yunohost/helpers
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
-ynh_script_progression --message="Restoring Netdata configuration directory..." --weight=1
+ynh_script_progression "Restoring Netdata configuration directory..."
 
-ynh_restore_file --origin_path="$install_dir/etc/netdata"
+ynh_restore "$install_dir/etc/netdata"
 
 #=================================================
 # INSTALL AND RESTORE THE APP CONFIGURATION
 #=================================================
-ynh_script_progression --message="Reinstalling Netdata..." --weight=18
+ynh_script_progression "Reinstalling Netdata..."
 
 # Download, check integrity, uncompress and patch the source from app.src
 NETDATA_TMPDIR="$install_dir/netdata_install"
@@ -37,11 +31,11 @@ export GOPATH="$GO_TMPDIR/go/"
 export HOME=${HOME:-"/root/"}
 pushd "$NETDATA_TMPDIR"
     # the installer.sh script will append "netdata" after the --install-prefix arg
-    ynh_exec_warn_less ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
+    ynh_hide_warnings ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
 popd
 
-ynh_secure_remove --file=$NETDATA_TMPDIR
-ynh_secure_remove --file=$GO_TMPDIR
+ynh_safe_rm $NETDATA_TMPDIR
+ynh_safe_rm $GO_TMPDIR
 
 # Specific configuration
 configure_netdata
@@ -49,23 +43,23 @@ configure_netdata
 #=================================================
 # RESTORE SYSTEM CONFIGURATIONS
 #=================================================
-ynh_script_progression --message="Restoring system configurations related to $app..." --weight=1
+ynh_script_progression "Restoring system configurations related to $app..."
 
-ynh_restore_file --origin_path="/etc/nginx/conf.d/$domain.d/$app.conf"
+ynh_restore "/etc/nginx/conf.d/$domain.d/$app.conf"
 
 yunohost service add "$app" --description "Real-time performance and health monitoring" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Reloading NGINX web server and $app's service..." --weight=1
+ynh_script_progression "Reloading NGINX web server and $app's service..."
 
-ynh_systemd_action --service_name="$app" --action="start" --log_path="$install_dir/var/log/$app/error.log"
+ynh_systemctl --service="$app" --action="start" --log_path="$install_dir/var/log/$app/error.log"
 
-ynh_systemd_action --service_name=nginx --action=reload
+ynh_systemctl --service=nginx --action=reload
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Restoration completed for $app" --last
+ynh_script_progression "Restoration completed for $app"
