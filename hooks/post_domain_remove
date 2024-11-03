@@ -7,4 +7,4 @@ domain=$1
 # by deleting every line between:
 # - the domain label (with "." replaced by "_")
 # - and the domain file specification (need to replace "." by "\." in order not to get interpreted by sed)
-sed --in-place "/${domain//\./_}_log/,/${domain//\./\\\.}/d" /opt/netdata/etc/netdata/go.d/web_log.conf
+sed --in-place "/${domain//\./_}_log/,/${domain//\./\\\.}/d" /var/www/netdata/etc/netdata/go.d/web_log.conf
