@@ -7,7 +7,7 @@ name = "NetData"
 description.en = "Real-time performance and health monitoring"
 description.fr = "Monitoring serveur en temps reel"
 
-version = "1.47.5~ynh1"
+version = "2.1.0~ynh1"
 
 maintainers = ["JimboJoe"]
 
@@ -53,8 +53,8 @@ ram.runtime = "50M"
 
     [resources.sources]
     [resources.sources.main]
-    url = "https://github.com/netdata/netdata/releases/download/v1.47.5/netdata-v1.47.5.tar.gz"
-    sha256 = "8073eee2392f92daa1f8bb5cf13fb988b8c3b52ff9574b50706ff69bdbdb51ce"
+    url = "https://github.com/netdata/netdata/releases/download/v2.1.0/netdata-v2.1.0.tar.gz"
+    sha256 = "f70d8f0e73e02378e8e72a5e90c69bf773c1f54f539bf3e1cc9936a58344c4d2"
     autoupdate.strategy = "latest_github_release"
     autoupdate.asset = "^netdata-v([0-9.]*)tar.gz$"
     [resources.sources.go]
@@ -75,4 +75,4 @@ ram.runtime = "50M"
     main.url = "/"
 
     [resources.apt]
-    packages = "cmake, ninja-build, pkg-config, bison, flex, gcc, g++, git, mariadb-server, libelf-dev, libssl-dev, liblz4-dev, zlib1g-dev, uuid-dev, libyaml-dev, libjson-c-dev, libuv1-dev"
+    packages = "cmake, ninja-build, pkg-config, bison, flex, gcc, g++, git, mariadb-server, libelf-dev, libssl-dev, liblz4-dev, zlib1g-dev, uuid-dev, libyaml-dev, libjson-c-dev, libuv1-dev, curl, gzip, libatomic1, libmnl-dev, libsystemd-dev, python3, tar, libcurl4-openssl-dev"
