@@ -1,11 +1,8 @@
 #!/bin/bash
 
-# Keep this path for calling _common.sh inside the execution's context of backup and restore scripts
 source ../settings/scripts/_common.sh
 source /usr/share/yunohost/helpers
 
-#=================================================
-# STANDARD RESTORATION STEPS
 #=================================================
 # RESTORE THE APP MAIN DIR
 #=================================================
@@ -18,7 +15,6 @@ ynh_restore "$install_dir/etc/netdata"
 #=================================================
 ynh_script_progression "Reinstalling Netdata..."
 
-# Download, check integrity, uncompress and patch the source from app.src
 NETDATA_TMPDIR="$install_dir/netdata_install"
 mkdir -p $NETDATA_TMPDIR
 ynh_setup_source --dest_dir="$NETDATA_TMPDIR"

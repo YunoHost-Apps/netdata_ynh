@@ -23,13 +23,12 @@ not-totally-free-upstream.en = "Netdata now includes a dependencie to a UI which
 not-totally-free-upstream.fr = "Netdata inclut maintenant une dépendance à une interface utilisateur qui est sous une licence bizarre qui interdit la rétro-ingénierie ou la personnalisation. Voir : https://github.com/YunoHost/apps/pull/2519"
 
 [integration]
-yunohost = ">= 11.2.30"
+yunohost = ">= 12.0.9"
 helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
 
 ldap = false
-
 sso = false
 
 disk = "50M"
