@@ -5,7 +5,9 @@
 
 # YunoHost 上的 NetData
 
-[![集成程度](https://dash.yunohost.org/integration/netdata.svg)](https://ci-apps.yunohost.org/ci/apps/netdata/) ![工作状态](https://ci-apps.yunohost.org/ci/badges/netdata.status.svg) ![维护状态](https://ci-apps.yunohost.org/ci/badges/netdata.maintain.svg)
+[![集成程度](https://apps.yunohost.org/badge/integration/netdata)](https://ci-apps.yunohost.org/ci/apps/netdata/)
+![工作状态](https://apps.yunohost.org/badge/state/netdata)
+![维护状态](https://apps.yunohost.org/badge/maintained/netdata)
 
 [![使用 YunoHost 安装 NetData](https://install-app.yunohost.org/install-with-yunohost.svg)](https://install-app.yunohost.org/?app=netdata)
 
@@ -26,7 +28,7 @@ _netdata is **fast** and **efficient**, designed to permanently run on all syste
 disrupting their core function._
 
 
-**分发版本：** 1.47.5~ynh1
+**分发版本：** 2.1.1~ynh1
 
 **演示：** <https://learn.netdata.cloud/docs/agent/demo-sites/>
 ## :red_circle: 负面特征
