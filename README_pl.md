@@ -28,7 +28,7 @@ _netdata is **fast** and **efficient**, designed to permanently run on all syste
 disrupting their core function._
 
 
-**Dostarczona wersja:** 2.2.1~ynh1
+**Dostarczona wersja:** 2.2.3~ynh1
 
 **Demo:** <https://learn.netdata.cloud/docs/agent/demo-sites/>
 ## :red_circle: Niepożądane funkcje
