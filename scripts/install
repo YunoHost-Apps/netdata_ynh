@@ -1,18 +1,12 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
 #=================================================
-ynh_script_progression --message="Setting up source files..." --weight=11
+ynh_script_progression "Setting up source files..."
 
 # Download, check integrity, uncompress and patch the source from app.src
 NETDATA_TMPDIR="$install_dir/netdata_install"
@@ -25,18 +19,18 @@ ynh_setup_source --source_id="go" --dest_dir="$GO_TMPDIR"
 #=================================================
 # BUILD
 #=================================================
-ynh_script_progression --message="Executing Netdata installer..." --weight=10
+ynh_script_progression "Executing Netdata installer..."
 
 export PATH="$GO_TMPDIR/bin:$PATH"
 export GOPATH="$GO_TMPDIR/go/"
 export HOME=${HOME:-"/root/"}
 pushd "$NETDATA_TMPDIR"
     # the installer.sh script will append "netdata" after the --install-prefix arg
-    ynh_exec_warn_less ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
+    ynh_hide_warnings ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
 popd
 
-ynh_secure_remove --file=$NETDATA_TMPDIR
-ynh_secure_remove --file=$GO_TMPDIR
+ynh_safe_rm $NETDATA_TMPDIR
+ynh_safe_rm $GO_TMPDIR
 
 # Specific configuration
 configure_netdata
@@ -44,23 +38,21 @@ configure_netdata
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Adding system configurations related to $app..." --weight=1
+ynh_script_progression "Adding system configurations related to $app..."
 
-# Create a dedicated NGINX config
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 yunohost service add "$app" --description "Real-time performance and health monitoring" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=2
+ynh_script_progression "Starting $app's systemd service..."
 
-# Start a systemd service
-ynh_systemd_action --service_name="$app" --action="restart" --log_path="$install_dir/var/log/$app/error.log"
+ynh_systemctl --service="$app" --action="restart" --log_path="$install_dir/var/log/$app/error.log"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Installation of $app completed" --last
+ynh_script_progression "Installation of $app completed"
