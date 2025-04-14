@@ -1,18 +1,9 @@
 #!/bin/bash
 
-#=================================================
-# GENERIC START
-#=================================================
-# IMPORT GENERIC HELPERS
-#=================================================
-
 source _common.sh
 source /usr/share/yunohost/helpers
 
-#=================================================
-# DOWNLOAD, CHECK AND UNPACK SOURCE
-#=================================================
-ynh_script_progression --message="Upgrading source files..." --weight=18
+ynh_script_progression "Upgrading source files..."
 
 #=================================================
 # DOWNLOAD, CHECK AND UNPACK SOURCE
@@ -27,8 +18,6 @@ mkdir -p $GO_TMPDIR
 ynh_setup_source --source_id="go" --dest_dir="$GO_TMPDIR"
 
 #=================================================
-# SPECIFIC UPGRADE
-#=================================================
 
 # signal netdata to start saving its database
 # this is handy if your database is big
@@ -42,11 +31,11 @@ export GOPATH="$GO_TMPDIR/go/"
 export HOME=${HOME:-"/root/"}
 pushd "$NETDATA_TMPDIR"
     # the installer.sh script will append "netdata" after the --install-prefix arg
-    ynh_exec_warn_less ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
+    ynh_hide_warnings ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
 popd
 
-ynh_secure_remove --file=$NETDATA_TMPDIR
-ynh_secure_remove --file=$GO_TMPDIR
+ynh_safe_rm $NETDATA_TMPDIR
+ynh_safe_rm $GO_TMPDIR
 
 # Specific configuration
 configure_netdata
@@ -54,22 +43,21 @@ configure_netdata
 #=================================================
 # NGINX CONFIGURATION
 #=================================================
-ynh_script_progression --message="Upgrading system configurations related to $app..." --weight=1
+ynh_script_progression "Upgrading system configurations related to $app..."
 
-# Create a dedicated NGINX config
-ynh_add_nginx_config
+ynh_config_add_nginx
 
 yunohost service add "$app" --description "Real-time performance and health monitoring" --log "$install_dir/var/log/netdata/error.log" "$install_dir/var/log/netdata/access.log" "$install_dir/var/log/netdata/debug.log"
 
 #=================================================
 # START SYSTEMD SERVICE
 #=================================================
-ynh_script_progression --message="Starting a systemd service..." --weight=1
+ynh_script_progression "Starting $app's systemd service..."
 
-ynh_systemd_action --service_name="$app" --action="restart" --log_path="$install_dir/var/log/$app/error.log"
+ynh_systemctl --service="$app" --action="restart" --log_path="$install_dir/var/log/$app/error.log"
 
 #=================================================
 # END OF SCRIPT
 #=================================================
 
-ynh_script_progression --message="Upgrade of $app completed" --last
+ynh_script_progression "Upgrade of $app completed"
