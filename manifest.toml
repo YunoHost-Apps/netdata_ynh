@@ -7,7 +7,7 @@ name = "NetData"
 description.en = "Real-time performance and health monitoring"
 description.fr = "Monitoring serveur en temps reel"
 
-version = "2.5.0~ynh1"
+version = "2.5.2~ynh1"
 
 maintainers = ["JimboJoe"]
 
@@ -23,12 +23,12 @@ not-totally-free-upstream.en = "Netdata now includes a dependencie to a UI which
 not-totally-free-upstream.fr = "Netdata inclut maintenant une dépendance à une interface utilisateur qui est sous une licence bizarre qui interdit la rétro-ingénierie ou la personnalisation. Voir : https://github.com/YunoHost/apps/pull/2519"
 
 [integration]
-yunohost = ">= 11.2"
+yunohost = ">= 12.0.9"
+helpers_version = "2.1"
 architectures = "all"
 multi_instance = false
 
 ldap = false
-
 sso = false
 
 disk = "50M"
@@ -53,8 +53,8 @@ ram.runtime = "50M"
 
     [resources.sources]
     [resources.sources.main]
-    url = "https://github.com/netdata/netdata/releases/download/v2.5.0/netdata-v2.5.0.tar.gz"
-    sha256 = "eb98dfe1aad6a97b48976c1888ec07adb5a26eb316e2e12d0d0efb928a801340"
+    url = "https://github.com/netdata/netdata/releases/download/v2.5.2/netdata-v2.5.2.tar.gz"
+    sha256 = "c4b969ea4fb6bc97828915ffd714a8898475640fe864ef624aae577fc1ae6de1"
     autoupdate.strategy = "latest_github_release"
     autoupdate.asset = "^netdata-v([0-9.]*)tar.gz$"
     [resources.sources.go]
@@ -76,3 +76,6 @@ ram.runtime = "50M"
 
     [resources.apt]
     packages = "cmake, ninja-build, pkg-config, bison, flex, gcc, g++, git, mariadb-server, libelf-dev, libssl-dev, liblz4-dev, zlib1g-dev, uuid-dev, libyaml-dev, libjson-c-dev, libuv1-dev, curl, gzip, libatomic1, libmnl-dev, libsystemd-dev, python3, tar, libcurl4-openssl-dev"
+
+    [resources.database]
+    type = "mysql"
