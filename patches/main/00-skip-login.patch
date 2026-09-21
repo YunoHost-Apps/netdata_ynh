@@ -1,8 +1,8 @@
 diff --git a/src/database/rrdfunctions-inflight.c b/src/database/rrdfunctions-inflight.c
-index a14234bff431c5..885960b283d26c 100644
+index f71220bd60..cf4a68ef60 100644
 --- a/src/database/rrdfunctions-inflight.c
 +++ b/src/database/rrdfunctions-inflight.c
-@@ -438,48 +438,6 @@ int rrd_function_run(RRDHOST *host, BUFFER *result_wb, int timeout_s,
+@@ -437,44 +437,6 @@ int rrd_function_verify_access(RRDHOST *host, BUFFER *result_wb, const char *cmd
          return code;
      }
  
@@ -41,12 +41,12 @@ index a14234bff431c5..885960b283d26c 100644
 -        }
 -
 -        dictionary_acquired_item_release(host->functions, host_function_acquired);
--
--        if(result_cb)
--            result_cb(result_wb, code, result_cb_data);
--
 -        return code;
 -    }
 -
-     if(timeout_s <= 0)
-         timeout_s = rdcf->timeout;
+     if(out_acquired)
+         *out_acquired = host_function_acquired;
+     else
+-- 
+2.43.0
+
