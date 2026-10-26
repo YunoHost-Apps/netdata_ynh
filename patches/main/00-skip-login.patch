@@ -1,52 +1,16 @@
-diff --git a/src/database/rrdfunctions-inflight.c b/src/database/rrdfunctions-inflight.c
-index f71220bd60..cf4a68ef60 100644
---- a/src/database/rrdfunctions-inflight.c
-+++ b/src/database/rrdfunctions-inflight.c
-@@ -437,44 +437,6 @@ int rrd_function_verify_access(RRDHOST *host, BUFFER *result_wb, const char *cmd
-         return code;
-     }
+diff --git a/src/libnetdata/user-auth/http-access.h b/src/libnetdata/user-auth/http-access.h
+index 512b55b778..7b9a025a8d 100644
+--- a/src/libnetdata/user-auth/http-access.h
++++ b/src/libnetdata/user-auth/http-access.h
+@@ -79,7 +79,7 @@ HTTP_ACCESS http_access_from_source(const char *str);
+ bool log_cb_http_access_to_hex(struct web_buffer *wb, void *data);
  
--    if(!http_access_user_has_enough_access_level_for_endpoint(user_access, rdcf->access)) {
--
--        if((rdcf->access & HTTP_ACCESS_SIGNED_ID) && !(user_access & HTTP_ACCESS_SIGNED_ID))
--            code = rrd_call_function_error(result_wb,
--                                           "You need to be authenticated via Netdata Cloud Single-Sign-On (SSO) "
--                                           "to access this feature. Sign-in on this dashboard, "
--                                           "or access your Netdata via https://app.netdata.cloud.",
--                                           HTTP_ACCESS_PERMISSION_DENIED_HTTP_CODE(user_access));
--
--        else if((rdcf->access & HTTP_ACCESS_SAME_SPACE) && !(user_access & HTTP_ACCESS_SAME_SPACE))
--            code = rrd_call_function_error(result_wb,
--                                           "You need to login to the Netdata Cloud space this agent is claimed to, "
--                                           "to access this feature.",
--                                           HTTP_ACCESS_PERMISSION_DENIED_HTTP_CODE(user_access));
--
--        else if((rdcf->access & HTTP_ACCESS_COMMERCIAL_SPACE) && !(user_access & HTTP_ACCESS_COMMERCIAL_SPACE))
--            code = rrd_call_function_error(result_wb,
--                                           "This feature is only available for commercial users and supporters "
--                                           "of Netdata. To use it, please upgrade your space. "
--                                           "Thank you for supporting Netdata.",
--                                           HTTP_ACCESS_PERMISSION_DENIED_HTTP_CODE(user_access));
--
--        else {
--            HTTP_ACCESS missing_access = (~user_access) & rdcf->access;
--            char perms_str[1024];
--            http_access2txt(perms_str, sizeof(perms_str), ", ", missing_access);
--
--            char msg[2048];
--            snprintfz(msg, sizeof(msg), "This feature requires additional permissions: %s.", perms_str);
--
--            code = rrd_call_function_error(result_wb, msg,
--                                           HTTP_ACCESS_PERMISSION_DENIED_HTTP_CODE(user_access));
--        }
--
--        dictionary_acquired_item_release(host->functions, host_function_acquired);
--        return code;
--    }
--
-     if(out_acquired)
-         *out_acquired = host_function_acquired;
-     else
+ static inline bool http_access_user_has_enough_access_level_for_endpoint(HTTP_ACCESS user, HTTP_ACCESS endpoint) {
+-    return ((user & endpoint) == endpoint);
++    return true;
+ }
+ 
+ #define HTTP_ACCESS_PERMISSION_DENIED_HTTP_CODE(access) ((access & HTTP_ACCESS_SIGNED_ID) ? HTTP_RESP_FORBIDDEN : HTTP_RESP_PRECOND_FAIL)
 -- 
 2.43.0
 
