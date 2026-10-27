@@ -91,7 +91,8 @@ ram.runtime = "50M"
         "libsystemd-dev",
         "python3",
         "tar",
-        "libcurl4-openssl-dev"
+        "libcurl4-openssl-dev",
+        "libpcre2-dev"
     ]
 
     [resources.database]
