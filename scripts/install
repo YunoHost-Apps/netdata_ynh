@@ -23,7 +23,7 @@ ynh_script_progression "Executing Netdata installer..."
 
 pushd "$NETDATA_TMPDIR"
     # the installer.sh script will append "netdata" after the --install-prefix arg
-    ynh_hide_warnings ynh_exec_as_app env TMPDIR=$NETDATA_BUILD ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
+    ynh_hide_warnings ynh_exec_as_app TMPDIR=$NETDATA_BUILD ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
 popd
 
 ynh_safe_rm $NETDATA_TMPDIR
