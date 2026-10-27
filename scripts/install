@@ -12,22 +12,22 @@ ynh_script_progression "Setting up source files..."
 NETDATA_TMPDIR="$install_dir/netdata_install"
 mkdir -p $NETDATA_TMPDIR
 ynh_setup_source --dest_dir="$NETDATA_TMPDIR"
-mkdir -p $GO_TMPDIR
-ynh_setup_source --source_id="go" --dest_dir="$GO_TMPDIR"
+
+NETDATA_BUILD="$install_dir/netdata_build"
+mkdir -p $NETDATA_BUILD
 
 #=================================================
 # BUILD
 #=================================================
 ynh_script_progression "Executing Netdata installer..."
 
-export PATH="$GO_TMPDIR/bin:$PATH"
-export HOME=${HOME:-"/root/"}
 pushd "$NETDATA_TMPDIR"
     # the installer.sh script will append "netdata" after the --install-prefix arg
-    ynh_hide_warnings TMPDIR=$NETDATA_TMPDIR ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
+    ynh_hide_warnings ynh_exec_as_app env TMPDIR=$NETDATA_BUILD ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
 popd
 
 ynh_safe_rm $NETDATA_TMPDIR
+ynh_safe_rm $NETDATA_BUILD
 
 # Specific configuration
 configure_netdata
