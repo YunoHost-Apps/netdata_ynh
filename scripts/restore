@@ -24,7 +24,7 @@ mkdir -p $NETDATA_BUILD
 
 pushd "$NETDATA_TMPDIR"
     # the installer.sh script will append "netdata" after the --install-prefix arg
-    ynh_hide_warnings env TMPDIR=$NETDATA_BUILD GOPATH=$install_dir/go GOCACHE=$install_dir/gocache ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
+    ynh_hide_warnings env TMPDIR=$NETDATA_BUILD GOPATH=$install_dir/go GOCACHE=$install_dir/gocache $NETDATA_TMPDIR/netdata-installer.sh --install-prefix /var/www --dont-wait --disable-cloud --disable-telemetry --stable-channel
 popd
 
 ynh_safe_rm $NETDATA_TMPDIR
