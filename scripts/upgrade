@@ -13,9 +13,9 @@ ynh_script_progression "Upgrading source files..."
 NETDATA_TMPDIR="$install_dir/netdata_install"
 mkdir -p $NETDATA_TMPDIR
 ynh_setup_source --dest_dir="$NETDATA_TMPDIR"
-GO_TMPDIR="$install_dir/go_install"
-mkdir -p $GO_TMPDIR
-ynh_setup_source --source_id="go" --dest_dir="$GO_TMPDIR"
+
+NETDATA_BUILD="$install_dir/netdata_build"
+mkdir -p $NETDATA_BUILD
 
 #=================================================
 
@@ -26,16 +26,17 @@ if [ -n "${pids}" ]; then
 	kill -USR1 ${pids}
 fi
 
-export PATH="$GO_TMPDIR/bin:$PATH"
-export GOPATH="$GO_TMPDIR/go/"
 export HOME=${HOME:-"/root/"}
 pushd "$NETDATA_TMPDIR"
     # the installer.sh script will append "netdata" after the --install-prefix arg
-    ynh_hide_warnings ./netdata-installer.sh --install-prefix /var/www/ --dont-wait --disable-cloud --disable-telemetry --stable-channel
+    ynh_hide_warnings env TMPDIR=$NETDATA_BUILD GOPATH=$install_dir/go GOCACHE=$install_dir/gocache $NETDATA_TMPDIR/netdata-installer.sh --install-prefix /var/www --dont-wait --disable-cloud --disable-telemetry --stable-channel
 popd
 
 ynh_safe_rm $NETDATA_TMPDIR
-ynh_safe_rm $GO_TMPDIR
+ynh_safe_rm $NETDATA_BUILD
+ynh_safe_rm $install_dir/go
+ynh_safe_rm $install_dir/gocache
+
 
 # Specific configuration
 configure_netdata
