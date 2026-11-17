@@ -1,0 +1,16 @@
+diff --git a/netdata-installer.sh b/netdata-installer.sh
+index 1d9438c86a..d995960e16 100755
+--- a/netdata-installer.sh
++++ b/netdata-installer.sh
+@@ -34,7 +34,7 @@ fi
+ # reload the user profile
+
+ # shellcheck source=/dev/null
+-[ -f /etc/profile ] && . /etc/profile
++#[ -f /etc/profile ] && . /etc/profile
+
+ # make sure /etc/profile does not change our current directory
+ cd "${NETDATA_SOURCE_DIR}" || exit 1
+--
+2.39.5
+
